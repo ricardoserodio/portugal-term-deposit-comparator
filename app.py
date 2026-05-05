@@ -144,6 +144,14 @@ else:
         hide_index=True,
     )
 
+    st.subheader("Net Interest Comparison")
+
+    chart_data = ranking_table.copy()
+    chart_data["Deposit"] = chart_data["Banco"] + " — " + chart_data["Produto"]
+    chart_data = chart_data.set_index("Deposit")
+
+    st.bar_chart(chart_data["Juro líquido estimado (€)"])
+
     st.subheader("Selected Deposit Simulation")
 
     deposit_options = {}
