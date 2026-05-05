@@ -50,9 +50,9 @@ def generate_validation_report():
     This script does NOT change the main dataset.
     The final deposit dataset must only be updated after manual validation.
     """
-    VALIDATION_DIR.mkdir(exist_ok=True)
+    VALIDATION_DIR.mkdir(parents=True, exist_ok=True)
 
-    sources = pd.read_csv(SOURCE_LINKS_PATH)
+    sources = pd.read_csv(SOURCE_LINKS_PATH, sep="|")
 
     active_sources = sources[
         sources["Ativo"].astype(str).str.lower().isin(["sim", "yes", "true", "1"])

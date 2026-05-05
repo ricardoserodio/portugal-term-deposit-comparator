@@ -15,6 +15,11 @@ env/
 outputs/*.csv
 outputs/*.xlsx
 
+# Validation reports
+validation/*.csv
+validation/*.xlsx
+!validation/.gitkeep
+
 # Keep outputs folder structure
 !outputs/.gitkeep
 
