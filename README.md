@@ -51,6 +51,7 @@ The project intentionally excludes broad EU digital-only banks without a clear f
 - Interactive Google Colab prototype
 - Reusable Python calculation module
 - Basic usage example script
+- Export ranking results to CSV
 
 ---
 
@@ -156,10 +157,14 @@ portugal-term-deposit-comparator/
 │   └── depositos_prazo_core_portugal_corrigido.csv
 │
 ├── examples/
-│   └── basic_usage.py
+│   ├── basic_usage.py
+│   └── export_ranking.py
 │
 ├── notebooks/
 │   └── portugal-term-deposit-comparator.ipynb
+│
+├── outputs/
+│   └── .gitkeep
 │
 ├── src/
 │   └── calculator.py
@@ -204,6 +209,26 @@ python examples/basic_usage.py
 ```
 
 This will load the cleaned dataset from the `data/` folder and generate a ranking of eligible term deposits for a sample investment scenario.
+
+---
+
+## Export Ranking to CSV
+
+The project also includes an example script to export the ranking output to a CSV file.
+
+Run:
+
+```bash
+python examples/export_ranking.py
+```
+
+This will generate:
+
+```text
+outputs/ranking_output.csv
+```
+
+The exported file includes the ranked term deposits based on the selected sample scenario.
 
 ---
 
@@ -299,7 +324,7 @@ Before making any financial decision, users should always confirm the latest pro
 Planned improvements include:
 
 - Add a Streamlit dashboard
-- Add export to CSV/Excel
+- Add export to Excel
 - Add account cost impact on net return
 - Add source tracking per product
 - Add update date per product
@@ -316,7 +341,7 @@ Planned improvements include:
 
 `MVP completed`
 
-The current version includes a cleaned dataset, financial calculation logic, a reusable Python module, a basic usage example and an interactive Colab prototype.
+The current version includes a cleaned dataset, financial calculation logic, a reusable Python module, a basic usage example, CSV export functionality and an interactive Colab prototype.
 
 ---
 
