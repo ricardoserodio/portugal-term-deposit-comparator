@@ -87,6 +87,31 @@ ranking = compare_deposits(
     top_n=top_n,
 )
 
+st.subheader("Simulation Summary")
+
+summary_col1, summary_col2, summary_col3 = st.columns(3)
+
+summary_col1.metric("Capital", f"{capital:,.2f} €")
+summary_col2.metric("Maturity", f"{int(maturity_months)} months")
+summary_col3.metric("Results shown", top_n)
+
+summary_col4, summary_col5, summary_col6 = st.columns(3)
+
+summary_col4.metric(
+    "Early withdrawal required",
+    "Yes" if require_early_withdrawal else "No",
+)
+
+summary_col5.metric(
+    "New client products accepted",
+    "Yes" if accept_new_clients_only else "No",
+)
+
+summary_col6.metric(
+    "New money products accepted",
+    "Yes" if accept_new_money_only else "No",
+)
+
 st.subheader("Ranking Results")
 
 if ranking.empty:
