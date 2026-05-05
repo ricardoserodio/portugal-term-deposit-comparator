@@ -260,6 +260,49 @@ st.warning(
 
 
 # ------------------------------------------------------------
+# Project Highlights Section
+# ------------------------------------------------------------
+
+st.markdown("## Project Highlights")
+
+highlight_col1, highlight_col2, highlight_col3, highlight_col4 = st.columns(4)
+
+with highlight_col1:
+    st.info(
+        """
+        **Banking Analytics**  
+        Compares Portuguese term deposits using financial product criteria.
+        """
+    )
+
+with highlight_col2:
+    st.success(
+        """
+        **Net Yield Simulation**  
+        Estimates gross interest, tax impact, net interest and final amount.
+        """
+    )
+
+with highlight_col3:
+    st.warning(
+        """
+        **Eligibility Alerts**  
+        Flags new client rules, new money requirements and liquidity conditions.
+        """
+    )
+
+with highlight_col4:
+    st.info(
+        """
+        **Human Validation**  
+        Uses official source tracking and manual review before dataset updates.
+        """
+    )
+
+st.divider()
+
+
+# ------------------------------------------------------------
 # Data Quality & Human Validation Section
 # ------------------------------------------------------------
 
