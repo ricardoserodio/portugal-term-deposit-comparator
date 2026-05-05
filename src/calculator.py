@@ -150,6 +150,8 @@ def compare_deposits(
         "Produto",
         "Prazo (meses)",
         "TANB (%)",
+        "Juro bruto estimado (€)",
+        "IRS estimado (€)",
         "Juro líquido estimado (€)",
         "Montante final estimado (€)",
         "Alertas",
