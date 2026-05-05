@@ -506,28 +506,52 @@ with summary_col4:
 
 
 # ------------------------------------------------------------
-# Selected deposit card
+# Selected deposit simulation
 # ------------------------------------------------------------
 
-best = ranking.iloc[0]
-
-best_bank = best.get(bank_col_r, "N/A") if bank_col_r else "N/A"
-best_product = best.get(product_col_r, "N/A") if product_col_r else "N/A"
-best_tanb = best.get(tanb_col_r, "N/A") if tanb_col_r else "N/A"
-best_net_interest = best.get(net_interest_col, "N/A") if net_interest_col else "N/A"
-best_final_amount = best.get(final_amount_col, "N/A") if final_amount_col else "N/A"
-
 st.markdown("## Selected Deposit Simulation")
+
+selection_df = ranking.copy().reset_index(drop=True)
+
+
+def build_deposit_label(row: pd.Series) -> str:
+    bank_name = row.get(bank_col_r, "N/A") if bank_col_r else "N/A"
+    product_name = row.get(product_col_r, "N/A") if product_col_r else "N/A"
+    tanb_value = format_percentage(row.get(tanb_col_r)) if tanb_col_r else "N/A"
+    net_value = format_currency(row.get(net_interest_col)) if net_interest_col else "N/A"
+
+    return f"{bank_name} — {product_name} | TANB {tanb_value} | Net interest {net_value}"
+
+
+selection_df["Deposit Selection Label"] = selection_df.apply(build_deposit_label, axis=1)
+
+selected_label = st.selectbox(
+    "Select deposit to simulate",
+    options=selection_df["Deposit Selection Label"].tolist(),
+    index=0,
+)
+
+selected_index = selection_df[
+    selection_df["Deposit Selection Label"] == selected_label
+].index[0]
+
+selected_deposit = selection_df.loc[selected_index]
+
+selected_bank_name = selected_deposit.get(bank_col_r, "N/A") if bank_col_r else "N/A"
+selected_product_name = selected_deposit.get(product_col_r, "N/A") if product_col_r else "N/A"
+selected_tanb = selected_deposit.get(tanb_col_r, "N/A") if tanb_col_r else "N/A"
+selected_net_interest = selected_deposit.get(net_interest_col, "N/A") if net_interest_col else "N/A"
+selected_final_amount = selected_deposit.get(final_amount_col, "N/A") if final_amount_col else "N/A"
 
 st.markdown(
     f"""
     <div class="simulation-card">
-        <div class="card-title">{best_bank} — {best_product}</div>
+        <div class="card-title">{selected_bank_name} — {selected_product_name}</div>
         <div class="card-line"><strong>Capital:</strong> {format_currency(capital)}</div>
         <div class="card-line"><strong>Maturity:</strong> {maturity_months} months</div>
-        <div class="card-line"><strong>TANB:</strong> {format_percentage(best_tanb)}</div>
-        <div class="card-line"><strong>Estimated Net Interest:</strong> {format_currency(best_net_interest)}</div>
-        <div class="card-line"><strong>Estimated Final Amount:</strong> {format_currency(best_final_amount)}</div>
+        <div class="card-line"><strong>TANB:</strong> {format_percentage(selected_tanb)}</div>
+        <div class="card-line"><strong>Estimated Net Interest:</strong> {format_currency(selected_net_interest)}</div>
+        <div class="card-line"><strong>Estimated Final Amount:</strong> {format_currency(selected_final_amount)}</div>
     </div>
     """,
     unsafe_allow_html=True,
