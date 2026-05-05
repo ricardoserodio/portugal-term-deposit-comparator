@@ -128,19 +128,6 @@ st.markdown(
         font-size: 15px;
         margin-bottom: 6px;
     }
-
-    .validation-box {
-        border: 1px solid #374151;
-        border-radius: 14px;
-        padding: 18px;
-        background-color: #0F172A;
-        margin-bottom: 15px;
-    }
-
-    .section-divider {
-        margin-top: 25px;
-        margin-bottom: 25px;
-    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -222,7 +209,10 @@ top_n = st.sidebar.slider(
 # Header
 # ------------------------------------------------------------
 
-st.markdown('<div class="main-title">🏦 Portugal Term Deposit Comparator</div>', unsafe_allow_html=True)
+st.markdown(
+    '<div class="main-title">🏦 Portugal Term Deposit Comparator</div>',
+    unsafe_allow_html=True,
+)
 
 st.markdown(
     '<div class="subtitle">Compare Portuguese term deposits by estimated net yield, maturity, eligibility criteria and liquidity conditions.</div>',
@@ -234,26 +224,25 @@ st.markdown(
 # Dataset metadata and disclaimer
 # ------------------------------------------------------------
 
-with st.container():
-    meta_col1, meta_col2, meta_col3 = st.columns(3)
+meta_col1, meta_col2, meta_col3 = st.columns(3)
 
-    with meta_col1:
-        st.metric(
-            label="Dataset Reference Date",
-            value=metadata.get("reference_date", "Not available"),
-        )
+with meta_col1:
+    st.metric(
+        label="Dataset Reference Date",
+        value=metadata.get("reference_date", "Not available"),
+    )
 
-    with meta_col2:
-        st.metric(
-            label="Last Manual Validation",
-            value=metadata.get("last_manual_validation", "Not available"),
-        )
+with meta_col2:
+    st.metric(
+        label="Last Manual Validation",
+        value=metadata.get("last_manual_validation", "Not available"),
+    )
 
-    with meta_col3:
-        st.metric(
-            label="Dataset Status",
-            value="Curated dataset",
-        )
+with meta_col3:
+    st.metric(
+        label="Dataset Status",
+        value="Curated dataset",
+    )
 
 st.info(
     f"""
@@ -398,6 +387,7 @@ bank_col_r = find_column(ranking, ["Banco", "Bank"])
 product_col_r = find_column(ranking, ["Produto", "Product"])
 maturity_col_r = find_column(ranking, ["Prazo (meses)", "Maturity", "Maturity (months)"])
 tanb_col_r = find_column(ranking, ["TANB (%)", "TANB", "Gross Rate"])
+
 net_interest_col = find_column(
     ranking,
     [
@@ -407,6 +397,7 @@ net_interest_col = find_column(
         "Estimated net interest",
     ],
 )
+
 final_amount_col = find_column(
     ranking,
     [
@@ -416,6 +407,7 @@ final_amount_col = find_column(
         "Estimated final amount",
     ],
 )
+
 gross_interest_col = find_column(
     ranking,
     [
@@ -424,6 +416,7 @@ gross_interest_col = find_column(
         "Estimated Gross Interest",
     ],
 )
+
 tax_col = find_column(
     ranking,
     [
@@ -432,8 +425,10 @@ tax_col = find_column(
         "Tax",
     ],
 )
+
 alerts_col = find_column(ranking, ["Alertas", "Alerts"])
 notes_col = find_column(ranking, ["Notas / condições", "Notas", "Notes", "Conditions"])
+
 source_col = find_column(
     ranking,
     [
@@ -519,11 +514,15 @@ if net_interest_col and product_col_r:
     st.markdown("## Net Interest Comparison")
 
     chart_df = ranking.copy()
-    chart_df["Display Label"] = (
-        chart_df[bank_col_r].astype(str) + " — " + chart_df[product_col_r].astype(str)
-        if bank_col_r
-        else chart_df[product_col_r].astype(str)
-    )
+
+    if bank_col_r:
+        chart_df["Display Label"] = (
+            chart_df[bank_col_r].astype(str)
+            + " — "
+            + chart_df[product_col_r].astype(str)
+        )
+    else:
+        chart_df["Display Label"] = chart_df[product_col_r].astype(str)
 
     fig = px.bar(
         chart_df.sort_values(net_interest_col, ascending=True),
@@ -532,10 +531,4 @@ if net_interest_col and product_col_r:
         orientation="h",
         title="Estimated Net Interest by Product",
         labels={
-            net_interest_col: "Estimated Net Interest (€)",
-            "Display Label": "Deposit Product",
-        },
-    )
-
-    fig.update_layout(
-        height=max(400, len(chart_df_
+            ne
