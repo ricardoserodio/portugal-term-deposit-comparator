@@ -14,6 +14,7 @@ The tool allows users to filter deposits based on:
 
 - Investment amount
 - Maturity
+- Bank
 - New client eligibility
 - New money requirements
 - Early withdrawal conditions
@@ -40,6 +41,7 @@ The project intentionally excludes broad EU digital-only banks without a clear f
 - Cleaned dataset of Portuguese term deposits
 - Filtering by investment amount
 - Filtering by maturity
+- Bank-level filtering
 - Filtering by new client requirement
 - Filtering by new money requirement
 - Filtering by early withdrawal availability
@@ -122,6 +124,7 @@ Example input:
 
 `Capital: 10,000 EUR`  
 `Maturity: 12 months`  
+`Bank: All banks`  
 `Accept new client products: Yes`  
 `Accept new money products: Yes`  
 `Require early withdrawal: No`
@@ -232,12 +235,21 @@ The app allows users to simulate term deposit rankings using:
 
 - Investment amount
 - Maturity
+- Bank filter
 - Early withdrawal preference
 - New client product eligibility
 - New money product eligibility
 - Number of results to display
 
-The app also includes a CSV download button for the generated ranking.
+The app also includes:
+
+- Simulation summary
+- Ranking table
+- Net interest comparison chart
+- Selectable deposit simulation panel
+- Product notes and official source links
+- CSV download button
+- Excel download button
 
 ---
 
@@ -294,6 +306,7 @@ The module includes functions to:
 - Load the dataset
 - Prepare numeric and text fields
 - Filter deposits by eligibility criteria
+- Filter deposits by bank
 - Calculate gross interest
 - Estimate withholding tax
 - Calculate net interest
@@ -314,6 +327,7 @@ ranking = compare_deposits(
     df=df,
     capital=10000,
     maturity_months=12,
+    selected_bank="All banks",
     require_early_withdrawal=False,
     accept_new_clients_only=True,
     accept_new_money_only=True,
@@ -381,7 +395,8 @@ Planned improvements include:
 - Add historical tracking of rate changes
 - Add product-level confidence score
 - Add deposit guarantee scheme information
-- Deploy the Streamlit app online
+- Add “no alerts only” filter
+- Deploy versioned Streamlit releases
 
 ---
 
