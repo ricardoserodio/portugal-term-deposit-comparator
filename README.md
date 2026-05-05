@@ -2,7 +2,7 @@
 
 A Python-based tool to compare Portuguese term deposits by net yield, maturity, eligibility criteria and liquidity conditions.
 
-This project was created as a practical banking and data analysis mini-project, combining financial product analysis, Python, pandas, Streamlit and an interactive Google Colab prototype.
+This project was created as a practical banking and data analysis mini-project, combining financial product analysis, Python, pandas, Streamlit, Plotly and an interactive Google Colab prototype.
 
 ---
 
@@ -56,6 +56,9 @@ The project intentionally excludes broad EU digital-only banks without a clear f
 - Export ranking results to CSV
 - Export ranking results to Excel
 - Streamlit simulator app
+- Interactive Plotly chart
+- Visual selected deposit simulation card
+- Product notes and official source links
 
 ---
 
@@ -176,6 +179,7 @@ portugal-term-deposit-comparator/
 ├── src/
 │   └── calculator.py
 │
+├── .gitignore
 ├── README.md
 ├── requirements.txt
 └── LICENSE
@@ -191,6 +195,7 @@ portugal-term-deposit-comparator/
 - Google Colab
 - ipywidgets
 - Streamlit
+- Plotly
 - openpyxl
 - GitHub
 
@@ -245,7 +250,8 @@ The app also includes:
 
 - Simulation summary
 - Ranking table
-- Net interest comparison chart
+- Interactive horizontal chart with Plotly
+- Visual selected deposit simulation card
 - Selectable deposit simulation panel
 - Product notes and official source links
 - CSV download button
@@ -369,6 +375,7 @@ Important limitations:
 - Early withdrawal conditions may vary and should be checked in the official documentation.
 - The tax calculation is simplified and assumes a standard 28% withholding tax.
 - The project does not account for all possible tax situations or exemptions.
+- The dataset may not reflect real-time product changes.
 
 ---
 
@@ -396,6 +403,7 @@ Planned improvements include:
 - Add product-level confidence score
 - Add deposit guarantee scheme information
 - Add “no alerts only” filter
+- Add real-time dataset update workflow
 - Deploy versioned Streamlit releases
 
 ---
@@ -404,7 +412,7 @@ Planned improvements include:
 
 `MVP completed`
 
-The current version includes a cleaned dataset, financial calculation logic, a reusable Python module, a basic usage example, CSV export functionality, Excel export functionality, a Streamlit simulator app and an interactive Colab prototype.
+The current version includes a cleaned dataset, financial calculation logic, a reusable Python module, a basic usage example, CSV and Excel export functionality, a Streamlit simulator app, an interactive Plotly chart and a visual selected deposit simulation panel.
 
 ---
 
