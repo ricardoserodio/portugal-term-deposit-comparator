@@ -163,7 +163,7 @@ else:
                 st.write("**Notes / conditions:** Not available")
 
             if source:
-                st.write(f"**Official source / reference:** {source}")
+                st.markdown(f"**Official source / reference:** [Open official source]({source})")
             else:
                 st.write("**Official source / reference:** Not available")
 
