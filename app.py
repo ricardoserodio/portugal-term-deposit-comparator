@@ -1,3 +1,5 @@
+from io import BytesIO
+
 import streamlit as st
 
 from src.calculator import load_data, prepare_data, compare_deposits
@@ -112,6 +114,18 @@ else:
         data=csv,
         file_name="ranking_output.csv",
         mime="text/csv",
+    )
+
+    excel_buffer = BytesIO()
+
+    ranking.to_excel(excel_buffer, index=False, engine="openpyxl")
+    excel_buffer.seek(0)
+
+    st.download_button(
+        label="Download ranking as Excel",
+        data=excel_buffer,
+        file_name="ranking_output.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
 
 st.caption(
