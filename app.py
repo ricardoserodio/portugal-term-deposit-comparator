@@ -126,23 +126,6 @@ else:
     col3.metric("Estimated Net Interest", f'{best["Juro líquido estimado (€)"]:.2f} €')
     col4.metric("Estimated Final Amount", f'{best["Montante final estimado (€)"]:.2f} €')
 
-    st.subheader("Best Deposit Simulation")
-
-    sim_col1, sim_col2, sim_col3 = st.columns(3)
-
-    sim_col1.write(f'**Bank:** {best["Banco"]}')
-    sim_col1.write(f'**Product:** {best["Produto"]}')
-    sim_col1.write(f"**Capital invested:** {capital:,.2f} €")
-
-    sim_col2.write(f'**Maturity:** {int(best["Prazo (meses)"])} months')
-    sim_col2.write(f'**TANB:** {best["TANB (%)"]:.2f}%')
-    sim_col2.write(f'**Alerts:** {best["Alertas"]}')
-
-    sim_col3.write(f'**Gross interest:** {best["Juro bruto estimado (€)"]:.2f} €')
-    sim_col3.write(f'**Estimated tax:** {best["IRS estimado (€)"]:.2f} €')
-    sim_col3.write(f'**Net interest:** {best["Juro líquido estimado (€)"]:.2f} €')
-    sim_col3.write(f'**Final amount:** {best["Montante final estimado (€)"]:.2f} €')
-
     ranking_table = ranking[
         [
             "Banco",
@@ -161,6 +144,56 @@ else:
         hide_index=True,
     )
 
+    st.subheader("Selected Deposit Simulation")
+
+    deposit_options = {}
+
+    for index, row in ranking.iterrows():
+        label = (
+            f'{row["Banco"]} — {row["Produto"]} | '
+            f'{row["TANB (%)"]:.2f}% | '
+            f'{int(row["Prazo (meses)"])} months | '
+            f'Net interest: {row["Juro líquido estimado (€)"]:.2f} €'
+        )
+        deposit_options[label] = index
+
+    selected_label = st.selectbox(
+        "Select deposit to simulate",
+        options=list(deposit_options.keys()),
+    )
+
+    selected_index = deposit_options[selected_label]
+    selected = ranking.loc[selected_index]
+
+    sim_col1, sim_col2, sim_col3 = st.columns(3)
+
+    sim_col1.write(f'**Bank:** {selected["Banco"]}')
+    sim_col1.write(f'**Product:** {selected["Produto"]}')
+    sim_col1.write(f"**Capital invested:** {capital:,.2f} €")
+
+    sim_col2.write(f'**Maturity:** {int(selected["Prazo (meses)"])} months')
+    sim_col2.write(f'**TANB:** {selected["TANB (%)"]:.2f}%')
+    sim_col2.write(f'**Alerts:** {selected["Alertas"]}')
+
+    sim_col3.write(f'**Gross interest:** {selected["Juro bruto estimado (€)"]:.2f} €')
+    sim_col3.write(f'**Estimated tax:** {selected["IRS estimado (€)"]:.2f} €')
+    sim_col3.write(f'**Net interest:** {selected["Juro líquido estimado (€)"]:.2f} €')
+    sim_col3.write(f'**Final amount:** {selected["Montante final estimado (€)"]:.2f} €')
+
+    notes = selected.get("Notas / condições", "")
+    source = selected.get("Fonte oficial / referência", "")
+
+    with st.expander("Selected deposit notes and official source", expanded=True):
+        if notes:
+            st.write(f"**Notes / conditions:** {notes}")
+        else:
+            st.write("**Notes / conditions:** Not available")
+
+        if source:
+            st.markdown(f"**Official source / reference:** [Open official source]({source})")
+        else:
+            st.write("**Official source / reference:** Not available")
+
     st.subheader("Product Details, Notes and Sources")
 
     for _, row in ranking.iterrows():
@@ -173,16 +206,16 @@ else:
             st.write(f'**Estimated final amount:** {row["Montante final estimado (€)"]:.2f} €')
             st.write(f'**Alerts:** {row["Alertas"]}')
 
-            notes = row.get("Notas / condições", "")
-            source = row.get("Fonte oficial / referência", "")
+            row_notes = row.get("Notas / condições", "")
+            row_source = row.get("Fonte oficial / referência", "")
 
-            if notes:
-                st.write(f"**Notes / conditions:** {notes}")
+            if row_notes:
+                st.write(f"**Notes / conditions:** {row_notes}")
             else:
                 st.write("**Notes / conditions:** Not available")
 
-            if source:
-                st.markdown(f"**Official source / reference:** [Open official source]({source})")
+            if row_source:
+                st.markdown(f"**Official source / reference:** [Open official source]({row_source})")
             else:
                 st.write("**Official source / reference:** Not available")
 
