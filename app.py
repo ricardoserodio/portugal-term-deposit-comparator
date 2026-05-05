@@ -55,6 +55,13 @@ maturity_months = st.sidebar.selectbox(
     index=available_maturities.index(12) if 12 in available_maturities else 0,
 )
 
+available_banks = ["All banks"] + sorted(df["Banco"].dropna().unique())
+
+selected_bank = st.sidebar.selectbox(
+    "Bank",
+    available_banks,
+)
+
 require_early_withdrawal = st.sidebar.checkbox(
     "Require early withdrawal option",
     value=False,
@@ -81,6 +88,7 @@ ranking = compare_deposits(
     df=df,
     capital=capital,
     maturity_months=maturity_months,
+    selected_bank=selected_bank,
     require_early_withdrawal=require_early_withdrawal,
     accept_new_clients_only=accept_new_clients_only,
     accept_new_money_only=accept_new_money_only,
@@ -89,25 +97,26 @@ ranking = compare_deposits(
 
 st.subheader("Simulation Summary")
 
-summary_col1, summary_col2, summary_col3 = st.columns(3)
+summary_col1, summary_col2, summary_col3, summary_col4 = st.columns(4)
 
 summary_col1.metric("Capital", f"{capital:,.2f} €")
 summary_col2.metric("Maturity", f"{int(maturity_months)} months")
-summary_col3.metric("Results shown", top_n)
+summary_col3.metric("Bank filter", selected_bank)
+summary_col4.metric("Results shown", top_n)
 
-summary_col4, summary_col5, summary_col6 = st.columns(3)
+summary_col5, summary_col6, summary_col7 = st.columns(3)
 
-summary_col4.metric(
+summary_col5.metric(
     "Early withdrawal required",
     "Yes" if require_early_withdrawal else "No",
 )
 
-summary_col5.metric(
+summary_col6.metric(
     "New client products accepted",
     "Yes" if accept_new_clients_only else "No",
 )
 
-summary_col6.metric(
+summary_col7.metric(
     "New money products accepted",
     "Yes" if accept_new_money_only else "No",
 )
