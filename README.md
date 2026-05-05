@@ -1,5 +1,12 @@
 # Portugal Term Deposit Comparator
 
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![Streamlit](https://img.shields.io/badge/Streamlit-App-red)
+![pandas](https://img.shields.io/badge/pandas-Data%20Analysis-blue)
+![Plotly](https://img.shields.io/badge/Plotly-Visualization-purple)
+![Data Governance](https://img.shields.io/badge/Data%20Governance-Human%20Validation-green)
+![License: MIT](https://img.shields.io/badge/License-MIT-green)
+
 A Python-based tool to compare Portuguese term deposits by estimated net yield, maturity, eligibility criteria and liquidity conditions.
 
 This project was created as a practical banking and data analysis mini-project, combining financial product analysis, Python, pandas, Streamlit, Plotly, Google Colab and a human-in-the-loop validation workflow.
