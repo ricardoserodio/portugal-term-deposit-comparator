@@ -1,5 +1,6 @@
 from io import BytesIO
 
+import plotly.express as px
 import streamlit as st
 
 from src.calculator import load_data, prepare_data, compare_deposits
@@ -12,13 +13,62 @@ st.set_page_config(
 )
 
 
-st.title("🏦 Portugal Term Deposit Comparator")
+st.markdown(
+    """
+    <style>
+    .main-title {
+        font-size: 42px;
+        font-weight: 800;
+        margin-bottom: 0px;
+    }
+    .subtitle {
+        font-size: 17px;
+        color: #B0B0B0;
+        margin-bottom: 25px;
+    }
+    .simulation-card {
+        background-color: #111827;
+        border: 1px solid #374151;
+        border-radius: 16px;
+        padding: 24px;
+        margin-top: 10px;
+        margin-bottom: 25px;
+    }
+    .card-title {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #FFFFFF;
+    }
+    .card-label {
+        color: #9CA3AF;
+        font-size: 13px;
+        margin-bottom: 2px;
+    }
+    .card-value {
+        color: #FFFFFF;
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 14px;
+    }
+    .small-muted {
+        color: #9CA3AF;
+        font-size: 13px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
-st.write(
+
+st.markdown(
     """
-    Compare Portuguese term deposits by estimated net yield, maturity,
-    eligibility criteria and liquidity conditions.
-    """
+    <div class="main-title">🏦 Portugal Term Deposit Comparator</div>
+    <div class="subtitle">
+    Compare Portuguese term deposits by estimated net yield, maturity, eligibility criteria and liquidity conditions.
+    </div>
+    """,
+    unsafe_allow_html=True,
 )
 
 st.warning(
@@ -41,7 +91,7 @@ df = get_data()
 st.sidebar.header("Simulation Inputs")
 
 capital = st.sidebar.number_input(
-    "Capital to invest (€)",
+    "Investment amount (€)",
     min_value=0.0,
     value=10000.0,
     step=500.0,
@@ -50,9 +100,10 @@ capital = st.sidebar.number_input(
 available_maturities = sorted(df["Prazo (meses)"].dropna().unique())
 
 maturity_months = st.sidebar.selectbox(
-    "Maturity (months)",
+    "Term",
     available_maturities,
     index=available_maturities.index(12) if 12 in available_maturities else 0,
+    format_func=lambda x: f"{int(x)} months",
 )
 
 available_banks = ["All banks"] + sorted(df["Banco"].dropna().unique())
@@ -63,17 +114,17 @@ selected_bank = st.sidebar.selectbox(
 )
 
 require_early_withdrawal = st.sidebar.checkbox(
-    "Require early withdrawal option",
+    "Require early withdrawal",
     value=False,
 )
 
 accept_new_clients_only = st.sidebar.checkbox(
-    "Accept products for new clients only",
+    "Include new-client offers",
     value=True,
 )
 
 accept_new_money_only = st.sidebar.checkbox(
-    "Accept products for new money only",
+    "Include new-money offers",
     value=True,
 )
 
@@ -100,9 +151,9 @@ st.subheader("Simulation Summary")
 summary_col1, summary_col2, summary_col3, summary_col4 = st.columns(4)
 
 summary_col1.metric("Capital", f"{capital:,.2f} €")
-summary_col2.metric("Maturity", f"{int(maturity_months)} months")
-summary_col3.metric("Bank filter", selected_bank)
-summary_col4.metric("Results shown", top_n)
+summary_col2.metric("Term", f"{int(maturity_months)} months")
+summary_col3.metric("Bank", selected_bank)
+summary_col4.metric("Results", top_n)
 
 summary_col5, summary_col6, summary_col7 = st.columns(3)
 
@@ -112,28 +163,108 @@ summary_col5.metric(
 )
 
 summary_col6.metric(
-    "New client products accepted",
+    "New-client offers included",
     "Yes" if accept_new_clients_only else "No",
 )
 
 summary_col7.metric(
-    "New money products accepted",
+    "New-money offers included",
     "Yes" if accept_new_money_only else "No",
 )
-
-st.subheader("Ranking Results")
 
 if ranking.empty:
     st.info("No eligible deposits found for the selected criteria.")
 else:
     best = ranking.iloc[0]
 
+    st.subheader("Selected Deposit Simulation")
+
+    deposit_options = {}
+
+    for index, row in ranking.iterrows():
+        label = (
+            f'{row["Banco"]} — {row["Produto"]} | '
+            f'{row["TANB (%)"]:.2f}% | '
+            f'{int(row["Prazo (meses)"])} months | '
+            f'Net interest: {row["Juro líquido estimado (€)"]:.2f} €'
+        )
+        deposit_options[label] = index
+
+    selected_label = st.selectbox(
+        "Select deposit to simulate",
+        options=list(deposit_options.keys()),
+    )
+
+    selected_index = deposit_options[selected_label]
+    selected = ranking.loc[selected_index]
+
+    st.markdown(
+        f"""
+        <div class="simulation-card">
+            <div class="card-title">{selected["Banco"]} — {selected["Produto"]}</div>
+            <div class="small-muted">Selected product simulation based on the chosen criteria.</div>
+            <br>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px;">
+                <div>
+                    <div class="card-label">Capital invested</div>
+                    <div class="card-value">{capital:,.2f} €</div>
+                </div>
+                <div>
+                    <div class="card-label">Term</div>
+                    <div class="card-value">{int(selected["Prazo (meses)"])} months</div>
+                </div>
+                <div>
+                    <div class="card-label">TANB</div>
+                    <div class="card-value">{selected["TANB (%)"]:.2f}%</div>
+                </div>
+                <div>
+                    <div class="card-label">Final amount</div>
+                    <div class="card-value">{selected["Montante final estimado (€)"]:.2f} €</div>
+                </div>
+                <div>
+                    <div class="card-label">Gross interest</div>
+                    <div class="card-value">{selected["Juro bruto estimado (€)"]:.2f} €</div>
+                </div>
+                <div>
+                    <div class="card-label">Estimated tax</div>
+                    <div class="card-value">{selected["IRS estimado (€)"]:.2f} €</div>
+                </div>
+                <div>
+                    <div class="card-label">Net interest</div>
+                    <div class="card-value">{selected["Juro líquido estimado (€)"]:.2f} €</div>
+                </div>
+                <div>
+                    <div class="card-label">Alerts</div>
+                    <div class="card-value" style="font-size: 15px;">{selected["Alertas"]}</div>
+                </div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    notes = selected.get("Notas / condições", "")
+    source = selected.get("Fonte oficial / referência", "")
+
+    with st.expander("Selected deposit notes and official source", expanded=True):
+        if notes:
+            st.write(f"**Notes / conditions:** {notes}")
+        else:
+            st.write("**Notes / conditions:** Not available")
+
+        if source:
+            st.markdown(f"**Official source / reference:** [Open official source]({source})")
+        else:
+            st.write("**Official source / reference:** Not available")
+
+    st.subheader("Ranking Results")
+
     col1, col2, col3, col4 = st.columns(4)
 
     col1.metric("Best Bank", best["Banco"])
     col2.metric("Best TANB", f'{best["TANB (%)"]:.2f}%')
-    col3.metric("Estimated Net Interest", f'{best["Juro líquido estimado (€)"]:.2f} €')
-    col4.metric("Estimated Final Amount", f'{best["Montante final estimado (€)"]:.2f} €')
+    col3.metric("Best Net Interest", f'{best["Juro líquido estimado (€)"]:.2f} €')
+    col4.metric("Best Final Amount", f'{best["Montante final estimado (€)"]:.2f} €')
 
     ranking_table = ranking[
         [
@@ -157,59 +288,29 @@ else:
 
     chart_data = ranking_table.copy()
     chart_data["Deposit"] = chart_data["Banco"] + " — " + chart_data["Produto"]
-    chart_data = chart_data.set_index("Deposit")
 
-    st.bar_chart(chart_data["Juro líquido estimado (€)"])
-
-    st.subheader("Selected Deposit Simulation")
-
-    deposit_options = {}
-
-    for index, row in ranking.iterrows():
-        label = (
-            f'{row["Banco"]} — {row["Produto"]} | '
-            f'{row["TANB (%)"]:.2f}% | '
-            f'{int(row["Prazo (meses)"])} months | '
-            f'Net interest: {row["Juro líquido estimado (€)"]:.2f} €'
-        )
-        deposit_options[label] = index
-
-    selected_label = st.selectbox(
-        "Select deposit to simulate",
-        options=list(deposit_options.keys()),
+    fig = px.bar(
+        chart_data.sort_values("Juro líquido estimado (€)", ascending=True),
+        x="Juro líquido estimado (€)",
+        y="Deposit",
+        orientation="h",
+        text="Juro líquido estimado (€)",
+        labels={
+            "Juro líquido estimado (€)": "Estimated net interest (€)",
+            "Deposit": "Deposit",
+        },
     )
 
-    selected_index = deposit_options[selected_label]
-    selected = ranking.loc[selected_index]
+    fig.update_traces(texttemplate="%{text:.2f} €", textposition="outside")
+    fig.update_layout(
+        height=max(350, 70 * len(chart_data)),
+        margin=dict(l=20, r=40, t=20, b=20),
+        yaxis_title=None,
+        xaxis_title="Estimated net interest (€)",
+        showlegend=False,
+    )
 
-    sim_col1, sim_col2, sim_col3 = st.columns(3)
-
-    sim_col1.write(f'**Bank:** {selected["Banco"]}')
-    sim_col1.write(f'**Product:** {selected["Produto"]}')
-    sim_col1.write(f"**Capital invested:** {capital:,.2f} €")
-
-    sim_col2.write(f'**Maturity:** {int(selected["Prazo (meses)"])} months')
-    sim_col2.write(f'**TANB:** {selected["TANB (%)"]:.2f}%')
-    sim_col2.write(f'**Alerts:** {selected["Alertas"]}')
-
-    sim_col3.write(f'**Gross interest:** {selected["Juro bruto estimado (€)"]:.2f} €')
-    sim_col3.write(f'**Estimated tax:** {selected["IRS estimado (€)"]:.2f} €')
-    sim_col3.write(f'**Net interest:** {selected["Juro líquido estimado (€)"]:.2f} €')
-    sim_col3.write(f'**Final amount:** {selected["Montante final estimado (€)"]:.2f} €')
-
-    notes = selected.get("Notas / condições", "")
-    source = selected.get("Fonte oficial / referência", "")
-
-    with st.expander("Selected deposit notes and official source", expanded=True):
-        if notes:
-            st.write(f"**Notes / conditions:** {notes}")
-        else:
-            st.write("**Notes / conditions:** Not available")
-
-        if source:
-            st.markdown(f"**Official source / reference:** [Open official source]({source})")
-        else:
-            st.write("**Official source / reference:** Not available")
+    st.plotly_chart(fig, use_container_width=True)
 
     st.subheader("Product Details, Notes and Sources")
 
@@ -236,27 +337,33 @@ else:
             else:
                 st.write("**Official source / reference:** Not available")
 
-    csv = ranking.to_csv(index=False).encode("utf-8-sig")
+    st.subheader("Downloads")
 
-    st.download_button(
-        label="Download ranking as CSV",
-        data=csv,
-        file_name="ranking_output.csv",
-        mime="text/csv",
-    )
+    csv = ranking.to_csv(index=False).encode("utf-8-sig")
 
     excel_buffer = BytesIO()
 
     ranking.to_excel(excel_buffer, index=False, engine="openpyxl")
     excel_buffer.seek(0)
 
-    st.download_button(
+    download_col1, download_col2 = st.columns(2)
+
+    download_col1.download_button(
+        label="Download ranking as CSV",
+        data=csv,
+        file_name="ranking_output.csv",
+        mime="text/csv",
+        use_container_width=True,
+    )
+
+    download_col2.download_button(
         label="Download ranking as Excel",
         data=excel_buffer,
         file_name="ranking_output.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        use_container_width=True,
     )
 
 st.caption(
-    "MVP prototype built with Python, pandas and Streamlit. Data should be validated against official bank sources."
+    "Prototype built with Python, pandas, Plotly and Streamlit. Data should be validated against official bank sources."
 )
