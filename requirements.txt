@@ -3,3 +3,4 @@ numpy
 ipywidgets
 openpyxl
 streamlit
+plotly
