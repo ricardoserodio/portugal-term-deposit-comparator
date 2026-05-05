@@ -2,7 +2,7 @@
 
 A Python-based tool to compare Portuguese term deposits by net yield, maturity, eligibility criteria and liquidity conditions.
 
-This project was created as a practical banking and data analysis mini-project, combining financial product analysis, Python, pandas and an interactive Google Colab prototype.
+This project was created as a practical banking and data analysis mini-project, combining financial product analysis, Python, pandas, Streamlit and an interactive Google Colab prototype.
 
 ---
 
@@ -53,6 +53,7 @@ The project intentionally excludes broad EU digital-only banks without a clear f
 - Basic usage example script
 - Export ranking results to CSV
 - Export ranking results to Excel
+- Streamlit simulator app
 
 ---
 
@@ -154,6 +155,7 @@ Current structure:
 ```text
 portugal-term-deposit-comparator/
 │
+├── app.py
 ├── data/
 │   └── depositos_prazo_core_portugal_corrigido.csv
 │
@@ -185,8 +187,9 @@ portugal-term-deposit-comparator/
 - NumPy
 - Google Colab
 - ipywidgets
-- GitHub
+- Streamlit
 - openpyxl
+- GitHub
 
 ---
 
@@ -212,6 +215,29 @@ python examples/basic_usage.py
 ```
 
 This will load the cleaned dataset from the `data/` folder and generate a ranking of eligible term deposits for a sample investment scenario.
+
+---
+
+## Run the Streamlit App
+
+The project includes a Streamlit simulator app.
+
+Run:
+
+```bash
+streamlit run app.py
+```
+
+The app allows users to simulate term deposit rankings using:
+
+- Investment amount
+- Maturity
+- Early withdrawal preference
+- New client product eligibility
+- New money product eligibility
+- Number of results to display
+
+The app also includes a CSV download button for the generated ranking.
 
 ---
 
@@ -346,7 +372,6 @@ Before making any financial decision, users should always confirm the latest pro
 
 Planned improvements include:
 
-- Add a Streamlit dashboard
 - Add account cost impact on net return
 - Add source tracking per product
 - Add update date per product
@@ -356,6 +381,7 @@ Planned improvements include:
 - Add historical tracking of rate changes
 - Add product-level confidence score
 - Add deposit guarantee scheme information
+- Deploy the Streamlit app online
 
 ---
 
@@ -363,7 +389,7 @@ Planned improvements include:
 
 `MVP completed`
 
-The current version includes a cleaned dataset, financial calculation logic, a reusable Python module, a basic usage example, CSV export functionality, Excel export functionality and an interactive Colab prototype.
+The current version includes a cleaned dataset, financial calculation logic, a reusable Python module, a basic usage example, CSV export functionality, Excel export functionality, a Streamlit simulator app and an interactive Colab prototype.
 
 ---
 
