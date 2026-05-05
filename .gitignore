@@ -30,3 +30,4 @@ Thumbs.db
 # IDE files
 .vscode/
 .idea/
+incoming_fin/*.pdf
