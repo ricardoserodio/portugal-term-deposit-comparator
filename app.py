@@ -524,11 +524,116 @@ if net_interest_col and product_col_r:
     else:
         chart_df["Display Label"] = chart_df[product_col_r].astype(str)
 
+    chart_df = chart_df.sort_values(net_interest_col, ascending=True)
+
     fig = px.bar(
-        chart_df.sort_values(net_interest_col, ascending=True),
+        chart_df,
         x=net_interest_col,
         y="Display Label",
         orientation="h",
         title="Estimated Net Interest by Product",
         labels={
-            ne
+            net_interest_col: "Estimated Net Interest (€)",
+            "Display Label": "Deposit Product",
+        },
+    )
+
+    fig.update_layout(
+        height=max(400, len(chart_df) * 45),
+        showlegend=False,
+        margin=dict(l=20, r=20, t=60, b=20),
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+
+# ------------------------------------------------------------
+# Product details, notes and official sources
+# ------------------------------------------------------------
+
+st.markdown("## Product Details, Notes and Sources")
+
+for _, row in ranking.iterrows():
+    bank_name = row.get(bank_col_r, "N/A") if bank_col_r else "N/A"
+    product_name = row.get(product_col_r, "N/A") if product_col_r else "N/A"
+
+    with st.expander(f"{bank_name} — {product_name}"):
+        detail_col1, detail_col2, detail_col3 = st.columns(3)
+
+        with detail_col1:
+            if tanb_col_r:
+                st.metric("TANB", format_percentage(row.get(tanb_col_r)))
+            if maturity_col_r:
+                st.write(f"**Maturity:** {row.get(maturity_col_r)} months")
+
+        with detail_col2:
+            if gross_interest_col:
+                st.metric("Estimated Gross Interest", format_currency(row.get(gross_interest_col)))
+            if tax_col:
+                st.metric("Estimated Tax", format_currency(row.get(tax_col)))
+
+        with detail_col3:
+            if net_interest_col:
+                st.metric("Estimated Net Interest", format_currency(row.get(net_interest_col)))
+            if final_amount_col:
+                st.metric("Estimated Final Amount", format_currency(row.get(final_amount_col)))
+
+        if alerts_col:
+            st.write("**Alerts:**")
+            st.write(row.get(alerts_col, "No alerts"))
+
+        if notes_col:
+            st.write("**Notes / Conditions:**")
+            st.write(row.get(notes_col, "No notes available"))
+
+        if source_col:
+            source_value = row.get(source_col, "")
+            if pd.notna(source_value) and str(source_value).strip():
+                st.write("**Official Source / Reference:**")
+                st.write(source_value)
+
+
+# ------------------------------------------------------------
+# Downloads
+# ------------------------------------------------------------
+
+st.markdown("## Downloads")
+
+download_col1, download_col2 = st.columns(2)
+
+with download_col1:
+    csv_data = ranking.to_csv(index=False).encode("utf-8-sig")
+
+    st.download_button(
+        label="Download ranking as CSV",
+        data=csv_data,
+        file_name="term_deposit_ranking.csv",
+        mime="text/csv",
+    )
+
+with download_col2:
+    excel_data = to_excel_bytes(ranking)
+
+    st.download_button(
+        label="Download ranking as Excel",
+        data=excel_data,
+        file_name="term_deposit_ranking.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+
+# ------------------------------------------------------------
+# Footer
+# ------------------------------------------------------------
+
+st.divider()
+
+st.markdown(
+    """
+    <div class="small-muted">
+    MVP prototype built with Python, pandas, Streamlit and Plotly.  
+    Data should always be validated against official bank sources before any financial decision.
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
