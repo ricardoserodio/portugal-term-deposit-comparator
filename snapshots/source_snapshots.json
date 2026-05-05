@@ -1,0 +1,122 @@
+{
+  "e206d854380f1089": {
+    "bank": "Banco BAI Europa",
+    "product": "Depósito a Prazo Premium",
+    "source_type": "FIN/PDF",
+    "url": "https://depositoaprazo.bancobaieuropa.pt/wp-content/uploads/2026/02/FIN_DP_Particulares_Premium_022026.pdf",
+    "hash": "e59bfb63d63724d0e9b623fc3a4c9e113d69031098bec75b60cb10a5b0062292",
+    "content_length": 64,
+    "content_type": "application/pdf",
+    "last_accepted_snapshot": "2026-05-05 22:45:18"
+  },
+  "1615baf60d105646": {
+    "bank": "Banco BAI Europa",
+    "product": "Depósito a Prazo Premium",
+    "source_type": "Página comercial",
+    "url": "https://depositoaprazo.bancobaieuropa.pt/",
+    "hash": "92f8c31acbc3246e714a03f25b435a4d520cd9185140022dd3baf1b62bd6d943",
+    "content_length": 3604,
+    "content_type": "text/html; charset=utf-8",
+    "last_accepted_snapshot": "2026-05-05 22:45:18"
+  },
+  "6f0cdb7d793d0ad7": {
+    "bank": "Banco BAI Europa",
+    "product": "Depósito a Prazo Novos Clientes",
+    "source_type": "FIN/PDF",
+    "url": "https://depositoaprazo.bancobaieuropa.pt/wp-content/uploads/2026/03/FIN_DP_Particulares_Novos_Clientes_0302026.pdf",
+    "hash": "9c96b6b06122429bcdaf0c17e2f15517f4535cf30a813a523990b1be7c2d72ee",
+    "content_length": 64,
+    "content_type": "application/pdf",
+    "last_accepted_snapshot": "2026-05-05 22:45:18"
+  },
+  "a633ef193068e17f": {
+    "bank": "ActivoBank",
+    "product": "Depósito a Prazo Novos Clientes AB",
+    "source_type": "Página oficial",
+    "url": "https://www.activobank.pt/depositos-prazo-dinheiro-novo",
+    "hash": "728b17ef3d1e1fc60e7ff02973a531033f24ad9ee8bf5a9cf8efc7c079cea6f1",
+    "content_length": 3523,
+    "content_type": "text/html; charset=utf-8",
+    "last_accepted_snapshot": "2026-05-05 22:45:18"
+  },
+  "1dcc2003fc5e77c9": {
+    "bank": "ActivoBank",
+    "product": "Preçário Depósitos a Prazo",
+    "source_type": "Preçário/PDF",
+    "url": "https://www.activobank.pt/PDF/PRECARIO_Aviso_8_2009.pdf",
+    "hash": "35e4de7ce10821c85d911c6640da93fd6ae1a748a521d42125e3447039b43c22",
+    "content_length": 64,
+    "content_type": "application/pdf",
+    "last_accepted_snapshot": "2026-05-05 22:45:18"
+  },
+  "006eeaf3cd6e14ee": {
+    "bank": "ActivoBank",
+    "product": "Depósito Dinheiro Novo AB",
+    "source_type": "Preçário/PDF",
+    "url": "https://www.activobank.pt/PDF/PRECARIO_Aviso_8_2009.pdf",
+    "hash": "35e4de7ce10821c85d911c6640da93fd6ae1a748a521d42125e3447039b43c22",
+    "content_length": 64,
+    "content_type": "application/pdf",
+    "last_accepted_snapshot": "2026-05-05 22:45:18"
+  },
+  "2868578db6579618": {
+    "bank": "Banco Best",
+    "product": "Depósito a Prazo Novos Clientes",
+    "source_type": "Página oficial",
+    "url": "https://www.bancobest.pt/ptg/best_deposito-prazo-novos-clientes",
+    "hash": "537bf565b6b1d63b3de1b72e725064214198794622c23d4478d6296a92dd322c",
+    "content_length": 16270,
+    "content_type": "text/html;charset=utf-8",
+    "last_accepted_snapshot": "2026-05-05 22:45:18"
+  },
+  "eec6e83e2f79af81": {
+    "bank": "Banco BIG",
+    "product": "Super Depósito 3 Meses",
+    "source_type": "Página oficial",
+    "url": "https://www.big.pt/TaxasDepositos/TodosDepositos/Details/PTDP2025074",
+    "hash": "2c991ea57aa9985ddac5a5bf4de15c6d1fdb79ab87827d5bc219412470633ad1",
+    "content_length": 4661,
+    "content_type": "text/html; charset=utf-8",
+    "last_accepted_snapshot": "2026-05-05 22:45:18"
+  },
+  "3ab5ac97e493b6f3": {
+    "bank": "Banco BIG",
+    "product": "Super Depósito 3 Meses",
+    "source_type": "FIN/PDF",
+    "url": "https://www.big.pt/TaxasDepositos/DepositosPrazo/FIN?DepositCode=PTDP2025074",
+    "hash": "0a97297313f1f53b5c5ddd58d73c141e3876223c2c82790c429758028cc39c96",
+    "content_length": 64,
+    "content_type": "application/pdf",
+    "last_accepted_snapshot": "2026-05-05 22:45:18"
+  },
+  "e228f0c571fc67dd": {
+    "bank": "Banco Invest",
+    "product": "Invest Choice Novos Montantes",
+    "source_type": "FIN/PDF",
+    "url": "https://www.bancoinvest.pt/docs/default-source/aplicacoesprazo/invest_choice_novos_depositos_20260417.pdf",
+    "hash": "e39a5c920c8d5fe851e8279be75c49deb74e0132645858d19d15febee1c02c51",
+    "content_length": 64,
+    "content_type": "application/pdf",
+    "last_accepted_snapshot": "2026-05-05 22:45:18"
+  },
+  "0442987fd9025638": {
+    "bank": "Banco Invest",
+    "product": "Aplicações a Prazo",
+    "source_type": "Página oficial",
+    "url": "https://www.bancoinvest.pt/poupanca-e-investimento/depositos/aplicacoes-a-prazo",
+    "hash": "9d91f9617dba43ce40dc9c2601f3d4ed08e849c7ba4068394eaf52e522d44b92",
+    "content_length": 6016,
+    "content_type": "text/html; charset=utf-8",
+    "last_accepted_snapshot": "2026-05-05 22:45:18"
+  },
+  "f935a0dd2732fae8": {
+    "bank": "Banco Invest",
+    "product": "Invest Depósito a Prazo",
+    "source_type": "FIN/PDF",
+    "url": "https://www.bancoinvest.pt/docs/default-source/aplicacoesprazo/invest_deposito_a_prazo_20260109.pdf",
+    "hash": "39339a70c02ea0ab54005d1cb0434cc72f4eda8ad68b251777ca8eaed7499f88",
+    "content_length": 64,
+    "content_type": "application/pdf",
+    "last_accepted_snapshot": "2026-05-05 22:45:18"
+  }
+}
