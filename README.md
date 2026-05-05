@@ -52,6 +52,7 @@ The project intentionally excludes broad EU digital-only banks without a clear f
 - Reusable Python calculation module
 - Basic usage example script
 - Export ranking results to CSV
+- Export ranking results to Excel
 
 ---
 
@@ -158,7 +159,8 @@ portugal-term-deposit-comparator/
 │
 ├── examples/
 │   ├── basic_usage.py
-│   └── export_ranking.py
+│   ├── export_ranking.py
+│   └── export_ranking_excel.py
 │
 ├── notebooks/
 │   └── portugal-term-deposit-comparator.ipynb
@@ -184,6 +186,7 @@ portugal-term-deposit-comparator/
 - Google Colab
 - ipywidgets
 - GitHub
+- openpyxl
 
 ---
 
@@ -214,7 +217,7 @@ This will load the cleaned dataset from the `data/` folder and generate a rankin
 
 ## Export Ranking to CSV
 
-The project also includes an example script to export the ranking output to a CSV file.
+The project includes an example script to export the ranking output to a CSV file.
 
 Run:
 
@@ -226,6 +229,26 @@ This will generate:
 
 ```text
 outputs/ranking_output.csv
+```
+
+The exported file includes the ranked term deposits based on the selected sample scenario.
+
+---
+
+## Export Ranking to Excel
+
+The project also includes an example script to export the ranking output to an Excel file.
+
+Run:
+
+```bash
+python examples/export_ranking_excel.py
+```
+
+This will generate:
+
+```text
+outputs/ranking_output.xlsx
 ```
 
 The exported file includes the ranked term deposits based on the selected sample scenario.
@@ -324,7 +347,6 @@ Before making any financial decision, users should always confirm the latest pro
 Planned improvements include:
 
 - Add a Streamlit dashboard
-- Add export to Excel
 - Add account cost impact on net return
 - Add source tracking per product
 - Add update date per product
@@ -341,7 +363,7 @@ Planned improvements include:
 
 `MVP completed`
 
-The current version includes a cleaned dataset, financial calculation logic, a reusable Python module, a basic usage example, CSV export functionality and an interactive Colab prototype.
+The current version includes a cleaned dataset, financial calculation logic, a reusable Python module, a basic usage example, CSV export functionality, Excel export functionality and an interactive Colab prototype.
 
 ---
 
