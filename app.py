@@ -40,14 +40,24 @@ TEXT = {
         "accept_new_money_only": "Accept products for new money only",
         "show_only_clean": "Show only products without relevant alerts",
         "number_results": "Number of results",
+
         "title": "🏦 Portugal Term Deposit Comparator",
         "subtitle": "Compare Portuguese term deposits by estimated net yield, maturity, eligibility criteria and liquidity conditions.",
+
+        "overview": "Overview",
+        "simulator": "Simulator",
+        "validation": "Validation",
+        "details": "Details",
+
         "dataset_reference_date": "Dataset Reference Date",
         "last_manual_validation": "Last Manual Validation",
         "dataset_status": "Dataset Status",
         "curated_dataset": "Curated dataset",
         "validation_status": "Validation status",
         "market_scope": "Market scope",
+        "data_freshness": "Data freshness",
+        "manual_validation_required": "Manual validation required",
+
         "project_highlights": "Project Highlights",
         "banking_analytics": "Banking Analytics",
         "banking_analytics_text": "Compares Portuguese term deposits using financial product criteria.",
@@ -57,6 +67,25 @@ TEXT = {
         "eligibility_alerts_text": "Flags new client rules, new money requirements and liquidity conditions.",
         "human_validation": "Human Validation",
         "human_validation_text": "Uses official source tracking and manual review before dataset updates.",
+
+        "methodology": "Methodology",
+        "methodology_intro": "The app follows a simple analytical workflow:",
+        "method_1": "Load manually curated term deposit dataset",
+        "method_2": "Apply eligibility and liquidity filters",
+        "method_3": "Estimate gross interest based on TANB and maturity",
+        "method_4": "Estimate tax impact using the selected tax assumption",
+        "method_5": "Calculate estimated net interest and final amount",
+        "method_6": "Rank deposits by estimated net interest",
+        "method_7": "Keep source monitoring separate from manual dataset updates",
+
+        "demonstrates": "What this project demonstrates",
+        "demo_1": "Banking product analysis",
+        "demo_2": "Python data analysis",
+        "demo_3": "Streamlit app development",
+        "demo_4": "Financial calculation logic",
+        "demo_5": "Data quality awareness",
+        "demo_6": "Human-in-the-loop validation",
+
         "data_quality": "Data Quality & Human Validation",
         "data_quality_intro": "This section summarizes the dataset governance and validation status used by this tool.",
         "data_quality_note": "The app uses a manually curated dataset and does **not** automatically update deposit rates or product conditions without human review.",
@@ -67,6 +96,7 @@ TEXT = {
         "human_validation_workflow_text": "Source checks generate validation reports before any dataset update.",
         "workflow_expander": "How the validation workflow works",
         "dataset_language_note": "Product notes, alerts and official source comments may remain in Portuguese because they reflect the original dataset and bank documentation.",
+
         "simulation_summary": "Simulation Summary",
         "capital": "Capital",
         "eligible_results": "Eligible Results",
@@ -76,17 +106,24 @@ TEXT = {
         "bank_filter": "Bank Filter",
         "best_tanb": "Best TANB",
         "mode": "Mode",
+
+        "recommended_option": "Recommended option",
+        "recommended_reason": "Recommended by highest estimated net interest among eligible deposits.",
+
         "selected_deposit_simulation": "Selected Deposit Simulation",
         "select_deposit": "Select deposit to simulate",
         "net_interest": "Net interest",
         "estimated_net_interest": "Estimated Net Interest",
         "estimated_final_amount": "Estimated Final Amount",
+
         "ranking_results": "Ranking Results",
         "ranking_intro": "The main ranking table shows the most relevant fields for comparison. Full product details, notes and sources are available in the expandable section below.",
         "show_full_table": "Show full technical ranking table",
+
         "net_interest_comparison": "Net Interest Comparison",
         "chart_title": "Estimated Net Interest by Product",
         "deposit_product": "Deposit Product",
+
         "product_details": "Product Details, Notes and Sources",
         "tanb": "TANB",
         "estimated_gross_interest": "Estimated Gross Interest",
@@ -94,11 +131,14 @@ TEXT = {
         "alerts": "Alerts",
         "notes_conditions": "Notes / Conditions",
         "official_source": "Official Source / Reference",
+
         "downloads": "Downloads",
         "download_csv": "Download ranking as CSV",
         "download_excel": "Download ranking as Excel",
+
         "no_eligible": "No eligible deposits found for the selected criteria.",
         "no_after_alert_filter": "No deposits found after applying the alert filter.",
+
         "footer_built": "MVP prototype built with Python, pandas, Streamlit and Plotly.",
         "footer_warning": "Data should always be validated against official bank sources before any financial decision.",
         "live_app": "Live App",
@@ -124,14 +164,24 @@ TEXT = {
         "accept_new_money_only": "Aceitar produtos apenas para novos montantes",
         "show_only_clean": "Mostrar apenas produtos sem alertas relevantes",
         "number_results": "Número de resultados",
+
         "title": "🏦 Comparador de Depósitos a Prazo em Portugal",
         "subtitle": "Compare depósitos a prazo em Portugal por rendimento líquido estimado, prazo, critérios de elegibilidade e condições de liquidez.",
+
+        "overview": "Visão Geral",
+        "simulator": "Simulador",
+        "validation": "Validação",
+        "details": "Detalhes",
+
         "dataset_reference_date": "Data de Referência dos Dados",
         "last_manual_validation": "Última Validação Manual",
         "dataset_status": "Estado do Dataset",
         "curated_dataset": "Dataset curado",
         "validation_status": "Estado da validação",
         "market_scope": "Âmbito de mercado",
+        "data_freshness": "Atualidade dos dados",
+        "manual_validation_required": "Validação manual necessária",
+
         "project_highlights": "Destaques do Projeto",
         "banking_analytics": "Análise Bancária",
         "banking_analytics_text": "Compara depósitos a prazo portugueses com base em critérios de produto financeiro.",
@@ -141,6 +191,25 @@ TEXT = {
         "eligibility_alerts_text": "Sinaliza regras de novos clientes, novos montantes e condições de liquidez.",
         "human_validation": "Validação Humana",
         "human_validation_text": "Usa acompanhamento de fontes oficiais e revisão manual antes de atualizar dados.",
+
+        "methodology": "Metodologia",
+        "methodology_intro": "A app segue um workflow analítico simples:",
+        "method_1": "Carregar dataset de depósitos a prazo manualmente curado",
+        "method_2": "Aplicar filtros de elegibilidade e liquidez",
+        "method_3": "Estimar juro bruto com base na TANB e no prazo",
+        "method_4": "Estimar impacto fiscal com base no pressuposto fiscal definido",
+        "method_5": "Calcular juro líquido estimado e montante final",
+        "method_6": "Ordenar depósitos por juro líquido estimado",
+        "method_7": "Manter monitorização de fontes separada das atualizações manuais do dataset",
+
+        "demonstrates": "O que este projeto demonstra",
+        "demo_1": "Análise de produto bancário",
+        "demo_2": "Análise de dados em Python",
+        "demo_3": "Desenvolvimento de app em Streamlit",
+        "demo_4": "Lógica de cálculo financeiro",
+        "demo_5": "Consciência de qualidade dos dados",
+        "demo_6": "Validação humana no processo",
+
         "data_quality": "Qualidade dos Dados e Validação Humana",
         "data_quality_intro": "Esta secção resume a governação dos dados e o estado de validação usado por esta ferramenta.",
         "data_quality_note": "A app usa um dataset manualmente curado e **não** atualiza automaticamente taxas ou condições dos produtos sem revisão humana.",
@@ -151,6 +220,7 @@ TEXT = {
         "human_validation_workflow_text": "As verificações de fontes geram relatórios de validação antes de qualquer atualização do dataset.",
         "workflow_expander": "Como funciona o workflow de validação",
         "dataset_language_note": "As notas dos produtos, alertas e comentários de fontes podem permanecer em português por refletirem o dataset original e a documentação bancária.",
+
         "simulation_summary": "Resumo da Simulação",
         "capital": "Capital",
         "eligible_results": "Resultados Elegíveis",
@@ -160,17 +230,24 @@ TEXT = {
         "bank_filter": "Filtro de Banco",
         "best_tanb": "Melhor TANB",
         "mode": "Modo",
+
+        "recommended_option": "Opção recomendada",
+        "recommended_reason": "Recomendado por maior juro líquido estimado entre os depósitos elegíveis.",
+
         "selected_deposit_simulation": "Simulação do Depósito Selecionado",
         "select_deposit": "Selecionar depósito para simular",
         "net_interest": "Juro líquido",
         "estimated_net_interest": "Juro Líquido Estimado",
         "estimated_final_amount": "Montante Final Estimado",
+
         "ranking_results": "Resultados do Ranking",
         "ranking_intro": "A tabela principal mostra os campos mais relevantes para comparação. Os detalhes completos, notas e fontes estão disponíveis na secção expansível abaixo.",
         "show_full_table": "Mostrar tabela técnica completa",
+
         "net_interest_comparison": "Comparação de Juro Líquido",
         "chart_title": "Juro Líquido Estimado por Produto",
         "deposit_product": "Produto de Depósito",
+
         "product_details": "Detalhes dos Produtos, Notas e Fontes",
         "tanb": "TANB",
         "estimated_gross_interest": "Juro Bruto Estimado",
@@ -178,11 +255,14 @@ TEXT = {
         "alerts": "Alertas",
         "notes_conditions": "Notas / Condições",
         "official_source": "Fonte Oficial / Referência",
+
         "downloads": "Descarregamentos",
         "download_csv": "Descarregar ranking em CSV",
         "download_excel": "Descarregar ranking em Excel",
+
         "no_eligible": "Não foram encontrados depósitos elegíveis para os critérios selecionados.",
         "no_after_alert_filter": "Não foram encontrados depósitos após aplicar o filtro de alertas.",
+
         "footer_built": "Protótipo MVP criado com Python, pandas, Streamlit e Plotly.",
         "footer_warning": "Os dados devem ser sempre validados contra fontes oficiais dos bancos antes de qualquer decisão financeira.",
         "live_app": "App online",
@@ -200,12 +280,10 @@ TEXT = {
 # ------------------------------------------------------------
 
 def get_language_code(language_label: str) -> str:
-    """Map selected language label to internal language code."""
     return "pt" if language_label == "Português" else "en"
 
 
 def translate(lang: str, key: str) -> str:
-    """Translate interface text."""
     return TEXT.get(lang, TEXT["en"]).get(key, key)
 
 
@@ -214,7 +292,6 @@ def translate(lang: str, key: str) -> str:
 # ------------------------------------------------------------
 
 def load_metadata(path: Path = METADATA_PATH) -> dict:
-    """Load dataset metadata used for app status and disclaimer."""
     if path.exists():
         with open(path, "r", encoding="utf-8") as file:
             return json.load(file)
@@ -238,7 +315,6 @@ def load_metadata(path: Path = METADATA_PATH) -> dict:
 # ------------------------------------------------------------
 
 def find_column(df: pd.DataFrame, candidates: list[str]) -> str | None:
-    """Find the first matching column from a list of possible column names."""
     for col in candidates:
         if col in df.columns:
             return col
@@ -246,14 +322,12 @@ def find_column(df: pd.DataFrame, candidates: list[str]) -> str | None:
 
 
 def get_series_value(row: pd.Series, column_name: str | None, default: str = "N/A"):
-    """Safely get a value from a pandas Series."""
     if column_name and column_name in row.index:
         return row[column_name]
     return default
 
 
 def to_excel_bytes(df: pd.DataFrame) -> bytes:
-    """Convert a dataframe to Excel bytes for Streamlit download."""
     output = BytesIO()
 
     with pd.ExcelWriter(output, engine="openpyxl") as writer:
@@ -263,7 +337,6 @@ def to_excel_bytes(df: pd.DataFrame) -> bytes:
 
 
 def format_currency(value) -> str:
-    """Format numeric values as EUR."""
     try:
         return f"{float(value):,.2f} €".replace(",", "X").replace(".", ",").replace("X", ".")
     except Exception:
@@ -271,18 +344,20 @@ def format_currency(value) -> str:
 
 
 def format_percentage(value) -> str:
-    """Format numeric values as percentage."""
     try:
         return f"{float(value):.2f}%"
     except Exception:
         return "N/A"
 
 
+def truncate_text(value, max_length: int = 60) -> str:
+    text = str(value)
+    if len(text) <= max_length:
+        return text
+    return text[: max_length - 3] + "..."
+
+
 def is_clean_alert(value) -> bool:
-    """
-    Conservative filter for products without relevant alerts.
-    Treats empty, none, no alerts and similar labels as clean.
-    """
     if pd.isna(value):
         return True
 
@@ -311,7 +386,6 @@ def build_clean_ranking_table(
     final_amount_col: str | None,
     alerts_col: str | None,
 ) -> pd.DataFrame:
-    """Build a clean translated ranking table for the main app view."""
     display_df = pd.DataFrame()
 
     if bank_col:
@@ -380,6 +454,24 @@ st.markdown(
         border: 1px solid #374151;
         border-radius: 16px;
         padding: 24px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    .recommended-card {
+        background-color: #052E16;
+        border: 1px solid #16A34A;
+        border-radius: 16px;
+        padding: 20px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    .freshness-card {
+        background-color: #422006;
+        border: 1px solid #F59E0B;
+        border-radius: 16px;
+        padding: 18px;
         margin-top: 10px;
         margin-bottom: 20px;
     }
@@ -558,200 +650,6 @@ st.markdown(
 
 
 # ------------------------------------------------------------
-# Dataset metadata and disclaimer
-# ------------------------------------------------------------
-
-meta_col1, meta_col2, meta_col3 = st.columns(3)
-
-with meta_col1:
-    st.metric(
-        label=translate(lang, "dataset_reference_date"),
-        value=metadata.get("reference_date", "Not available"),
-    )
-
-with meta_col2:
-    st.metric(
-        label=translate(lang, "last_manual_validation"),
-        value=metadata.get("last_manual_validation", "Not available"),
-    )
-
-with meta_col3:
-    st.metric(
-        label=translate(lang, "dataset_status"),
-        value=translate(lang, "curated_dataset"),
-    )
-
-st.info(
-    f"""
-    **{translate(lang, "validation_status")}:** {metadata.get("validation_status", "Not available")}  
-    **{translate(lang, "market_scope")}:** {metadata.get("market_scope", "Not available")}
-    """
-)
-
-st.warning(
-    metadata.get(
-        "disclaimer",
-        "This tool is for educational and informational purposes only. It does not constitute financial advice.",
-    )
-)
-
-
-# ------------------------------------------------------------
-# Project Highlights Section
-# ------------------------------------------------------------
-
-st.markdown(f"## {translate(lang, 'project_highlights')}")
-
-highlight_col1, highlight_col2, highlight_col3, highlight_col4 = st.columns(4)
-
-with highlight_col1:
-    st.markdown(
-        f"""
-        <div class="highlight-card">
-            <div class="highlight-icon">🏦</div>
-            <div class="highlight-title">{translate(lang, "banking_analytics")}</div>
-            <div class="highlight-text">
-            {translate(lang, "banking_analytics_text")}
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-with highlight_col2:
-    st.markdown(
-        f"""
-        <div class="highlight-card">
-            <div class="highlight-icon">📈</div>
-            <div class="highlight-title">{translate(lang, "net_yield_simulation")}</div>
-            <div class="highlight-text">
-            {translate(lang, "net_yield_simulation_text")}
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-with highlight_col3:
-    st.markdown(
-        f"""
-        <div class="highlight-card">
-            <div class="highlight-icon">⚠️</div>
-            <div class="highlight-title">{translate(lang, "eligibility_alerts")}</div>
-            <div class="highlight-text">
-            {translate(lang, "eligibility_alerts_text")}
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-with highlight_col4:
-    st.markdown(
-        f"""
-        <div class="highlight-card">
-            <div class="highlight-icon">✅</div>
-            <div class="highlight-title">{translate(lang, "human_validation")}</div>
-            <div class="highlight-text">
-            {translate(lang, "human_validation_text")}
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-st.divider()
-
-
-# ------------------------------------------------------------
-# Data Quality & Human Validation Section
-# ------------------------------------------------------------
-
-st.markdown(f"## {translate(lang, 'data_quality')}")
-
-st.markdown(
-    f"""
-    {translate(lang, "data_quality_intro")}
-
-    {translate(lang, "data_quality_note")}
-    """
-)
-
-dq_col1, dq_col2, dq_col3 = st.columns(3)
-
-with dq_col1:
-    st.metric(
-        label=translate(lang, "dataset_reference_date"),
-        value=metadata.get("reference_date", "Not available"),
-    )
-
-with dq_col2:
-    st.metric(
-        label=translate(lang, "last_manual_validation"),
-        value=metadata.get("last_manual_validation", "Not available"),
-    )
-
-with dq_col3:
-    st.metric(
-        label=translate(lang, "validation_status"),
-        value=translate(lang, "human_reviewed"),
-    )
-
-dq_col4, dq_col5 = st.columns(2)
-
-with dq_col4:
-    st.info(
-        f"""
-        **{translate(lang, "official_source_tracking")}:** {translate(lang, "enabled")}  
-        {translate(lang, "official_source_tracking_text")}
-        """
-    )
-
-with dq_col5:
-    st.success(
-        f"""
-        **{translate(lang, "human_validation_workflow")}:** {translate(lang, "enabled")}  
-        {translate(lang, "human_validation_workflow_text")}
-        """
-    )
-
-st.caption(f"**{translate(lang, 'technical_note')}:** {translate(lang, 'dataset_language_note')}")
-
-with st.expander(translate(lang, "workflow_expander")):
-    st.markdown(
-        """
-        ```text
-        Official bank sources
-                ↓
-        Source monitoring script
-                ↓
-        Validation report
-                ↓
-        Human review
-                ↓
-        Manual dataset update
-                ↓
-        Streamlit app uses validated data only
-        ```
-
-        ```bash
-        scripts/monitor_sources.py
-        ```
-
-        ```bash
-        data/source_links.csv
-        ```
-
-        ```bash
-        validation/
-        ```
-        """
-    )
-
-st.divider()
-
-
-# ------------------------------------------------------------
 # Run comparison
 # ------------------------------------------------------------
 
@@ -766,18 +664,13 @@ ranking = compare_deposits(
     top_n=top_n,
 )
 
-
-# ------------------------------------------------------------
-# Empty state after first filtering
-# ------------------------------------------------------------
-
 if ranking is None or ranking.empty:
     st.error(translate(lang, "no_eligible"))
     st.stop()
 
 
 # ------------------------------------------------------------
-# Column detection after calculation
+# Column detection
 # ------------------------------------------------------------
 
 bank_col_r = find_column(ranking, ["Banco", "Bank"])
@@ -851,291 +744,538 @@ if ranking.empty:
 
 
 # ------------------------------------------------------------
-# Simulation summary and KPI cards
+# Tabs
 # ------------------------------------------------------------
 
-st.markdown(f"## {translate(lang, 'simulation_summary')}")
+overview_tab, simulator_tab, validation_tab, details_tab = st.tabs(
+    [
+        translate(lang, "overview"),
+        translate(lang, "simulator"),
+        translate(lang, "validation"),
+        translate(lang, "details"),
+    ]
+)
 
-best_net_interest_value = None
-average_net_interest_value = None
-best_tanb_value = None
 
-if net_interest_col:
-    net_series = pd.to_numeric(ranking[net_interest_col], errors="coerce")
-    if not net_series.dropna().empty:
-        best_net_interest_value = net_series.max()
-        average_net_interest_value = net_series.mean()
+# ------------------------------------------------------------
+# Overview tab
+# ------------------------------------------------------------
 
-if tanb_col_r:
-    tanb_series = pd.to_numeric(ranking[tanb_col_r], errors="coerce")
-    if not tanb_series.dropna().empty:
-        best_tanb_value = tanb_series.max()
+with overview_tab:
+    meta_col1, meta_col2, meta_col3 = st.columns(3)
 
-summary_col1, summary_col2, summary_col3, summary_col4 = st.columns(4)
+    with meta_col1:
+        st.metric(
+            label=translate(lang, "dataset_reference_date"),
+            value=metadata.get("reference_date", "Not available"),
+        )
 
-with summary_col1:
-    st.metric(translate(lang, "capital"), format_currency(capital))
+    with meta_col2:
+        st.metric(
+            label=translate(lang, "last_manual_validation"),
+            value=metadata.get("last_manual_validation", "Not available"),
+        )
 
-with summary_col2:
-    st.metric(translate(lang, "eligible_results"), len(ranking))
+    with meta_col3:
+        st.metric(
+            label=translate(lang, "dataset_status"),
+            value=translate(lang, "curated_dataset"),
+        )
 
-with summary_col3:
-    st.metric(
-        translate(lang, "best_net_interest"),
-        format_currency(best_net_interest_value) if best_net_interest_value is not None else "N/A",
+    st.info(
+        f"""
+        **{translate(lang, "validation_status")}:** {metadata.get("validation_status", "Not available")}  
+        **{translate(lang, "market_scope")}:** {metadata.get("market_scope", "Not available")}
+        """
     )
 
-with summary_col4:
-    st.metric(
-        translate(lang, "average_net_interest"),
-        format_currency(average_net_interest_value) if average_net_interest_value is not None else "N/A",
+    st.markdown(
+        f"""
+        <div class="freshness-card">
+            <div class="card-title">⚠️ {translate(lang, "data_freshness")}</div>
+            <div class="card-line"><strong>{translate(lang, "manual_validation_required")}</strong></div>
+            <div class="card-line">{metadata.get("real_time_warning", metadata.get("disclaimer", ""))}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
-summary_col5, summary_col6, summary_col7, summary_col8 = st.columns(4)
-
-with summary_col5:
-    st.metric(translate(lang, "maturity"), f"{maturity_months} {translate(lang, 'months')}")
-
-with summary_col6:
-    st.metric(translate(lang, "bank_filter"), selected_bank_display)
-
-with summary_col7:
-    st.metric(
-        translate(lang, "best_tanb"),
-        format_percentage(best_tanb_value) if best_tanb_value is not None else "N/A",
+    st.warning(
+        metadata.get(
+            "disclaimer",
+            "This tool is for educational and informational purposes only. It does not constitute financial advice.",
+        )
     )
 
-with summary_col8:
-    st.metric(translate(lang, "mode"), app_mode_label)
+    st.markdown(f"## {translate(lang, 'project_highlights')}")
+
+    highlight_col1, highlight_col2, highlight_col3, highlight_col4 = st.columns(4)
+
+    with highlight_col1:
+        st.markdown(
+            f"""
+            <div class="highlight-card">
+                <div class="highlight-icon">🏦</div>
+                <div class="highlight-title">{translate(lang, "banking_analytics")}</div>
+                <div class="highlight-text">{translate(lang, "banking_analytics_text")}</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with highlight_col2:
+        st.markdown(
+            f"""
+            <div class="highlight-card">
+                <div class="highlight-icon">📈</div>
+                <div class="highlight-title">{translate(lang, "net_yield_simulation")}</div>
+                <div class="highlight-text">{translate(lang, "net_yield_simulation_text")}</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with highlight_col3:
+        st.markdown(
+            f"""
+            <div class="highlight-card">
+                <div class="highlight-icon">⚠️</div>
+                <div class="highlight-title">{translate(lang, "eligibility_alerts")}</div>
+                <div class="highlight-text">{translate(lang, "eligibility_alerts_text")}</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with highlight_col4:
+        st.markdown(
+            f"""
+            <div class="highlight-card">
+                <div class="highlight-icon">✅</div>
+                <div class="highlight-title">{translate(lang, "human_validation")}</div>
+                <div class="highlight-text">{translate(lang, "human_validation_text")}</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    st.markdown(f"## {translate(lang, 'methodology')}")
+    st.markdown(translate(lang, "methodology_intro"))
+
+    st.markdown(
+        f"""
+        1. {translate(lang, "method_1")}
+        2. {translate(lang, "method_2")}
+        3. {translate(lang, "method_3")}
+        4. {translate(lang, "method_4")}
+        5. {translate(lang, "method_5")}
+        6. {translate(lang, "method_6")}
+        7. {translate(lang, "method_7")}
+        """
+    )
+
+    st.markdown(f"## {translate(lang, 'demonstrates')}")
+
+    demo_col1, demo_col2, demo_col3 = st.columns(3)
+
+    with demo_col1:
+        st.success(f"✅ {translate(lang, 'demo_1')}")
+        st.success(f"✅ {translate(lang, 'demo_2')}")
+
+    with demo_col2:
+        st.success(f"✅ {translate(lang, 'demo_3')}")
+        st.success(f"✅ {translate(lang, 'demo_4')}")
+
+    with demo_col3:
+        st.success(f"✅ {translate(lang, 'demo_5')}")
+        st.success(f"✅ {translate(lang, 'demo_6')}")
 
 
 # ------------------------------------------------------------
-# Selected deposit simulation
+# Simulator tab
 # ------------------------------------------------------------
 
-st.markdown(f"## {translate(lang, 'selected_deposit_simulation')}")
+with simulator_tab:
+    st.markdown(f"## {translate(lang, 'simulation_summary')}")
 
-selection_df = ranking.copy().reset_index(drop=True)
+    best_net_interest_value = None
+    average_net_interest_value = None
+    best_tanb_value = None
 
+    if net_interest_col:
+        net_series = pd.to_numeric(ranking[net_interest_col], errors="coerce")
+        if not net_series.dropna().empty:
+            best_net_interest_value = net_series.max()
+            average_net_interest_value = net_series.mean()
+            recommended_index = net_series.idxmax()
+        else:
+            recommended_index = ranking.index[0]
+    else:
+        recommended_index = ranking.index[0]
 
-def build_deposit_label(row: pd.Series) -> str:
-    bank_name = get_series_value(row, bank_col_r)
-    product_name = get_series_value(row, product_col_r)
-    tanb_value = format_percentage(get_series_value(row, tanb_col_r)) if tanb_col_r else "N/A"
-    net_value = format_currency(get_series_value(row, net_interest_col)) if net_interest_col else "N/A"
+    if tanb_col_r:
+        tanb_series = pd.to_numeric(ranking[tanb_col_r], errors="coerce")
+        if not tanb_series.dropna().empty:
+            best_tanb_value = tanb_series.max()
 
-    return f"{bank_name} — {product_name} | TANB {tanb_value} | {translate(lang, 'net_interest')} {net_value}"
+    summary_col1, summary_col2, summary_col3, summary_col4 = st.columns(4)
 
+    with summary_col1:
+        st.metric(translate(lang, "capital"), format_currency(capital))
 
-selection_df["Deposit Selection Label"] = selection_df.apply(build_deposit_label, axis=1)
+    with summary_col2:
+        st.metric(translate(lang, "eligible_results"), len(ranking))
 
-selected_label = st.selectbox(
-    translate(lang, "select_deposit"),
-    options=selection_df["Deposit Selection Label"].tolist(),
-    index=0,
-)
+    with summary_col3:
+        st.metric(
+            translate(lang, "best_net_interest"),
+            format_currency(best_net_interest_value) if best_net_interest_value is not None else "N/A",
+        )
 
-selected_index = selection_df.index[
-    selection_df["Deposit Selection Label"] == selected_label
-][0]
+    with summary_col4:
+        st.metric(
+            translate(lang, "average_net_interest"),
+            format_currency(average_net_interest_value) if average_net_interest_value is not None else "N/A",
+        )
 
-selected_deposit = selection_df.iloc[selected_index]
+    summary_col5, summary_col6, summary_col7, summary_col8 = st.columns(4)
 
-selected_bank_name = get_series_value(selected_deposit, bank_col_r)
-selected_product_name = get_series_value(selected_deposit, product_col_r)
-selected_tanb = get_series_value(selected_deposit, tanb_col_r)
-selected_net_interest = get_series_value(selected_deposit, net_interest_col)
-selected_final_amount = get_series_value(selected_deposit, final_amount_col)
+    with summary_col5:
+        st.metric(translate(lang, "maturity"), f"{maturity_months} {translate(lang, 'months')}")
 
-st.markdown(
-    f"""
-    <div class="simulation-card">
-        <div class="card-title">{selected_bank_name} — {selected_product_name}</div>
-        <div class="card-line"><strong>{translate(lang, "capital")}:</strong> {format_currency(capital)}</div>
-        <div class="card-line"><strong>{translate(lang, "maturity")}:</strong> {maturity_months} {translate(lang, "months")}</div>
-        <div class="card-line"><strong>TANB:</strong> {format_percentage(selected_tanb)}</div>
-        <div class="card-line"><strong>{translate(lang, "estimated_net_interest")}:</strong> {format_currency(selected_net_interest)}</div>
-        <div class="card-line"><strong>{translate(lang, "estimated_final_amount")}:</strong> {format_currency(selected_final_amount)}</div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+    with summary_col6:
+        st.metric(translate(lang, "bank_filter"), selected_bank_display)
 
+    with summary_col7:
+        st.metric(
+            translate(lang, "best_tanb"),
+            format_percentage(best_tanb_value) if best_tanb_value is not None else "N/A",
+        )
 
-# ------------------------------------------------------------
-# Ranking results
-# ------------------------------------------------------------
+    with summary_col8:
+        st.metric(translate(lang, "mode"), app_mode_label)
 
-st.markdown(f"## {translate(lang, 'ranking_results')}")
+    best_row = ranking.loc[recommended_index]
+    best_bank = get_series_value(best_row, bank_col_r)
+    best_product = get_series_value(best_row, product_col_r)
+    best_net = get_series_value(best_row, net_interest_col)
 
-st.markdown(translate(lang, "ranking_intro"))
+    st.markdown(
+        f"""
+        <div class="recommended-card">
+            <div class="card-title">✅ {translate(lang, "recommended_option")}</div>
+            <div class="card-line"><strong>{best_bank} — {best_product}</strong></div>
+            <div class="card-line">{translate(lang, "recommended_reason")}</div>
+            <div class="card-line"><strong>{translate(lang, "estimated_net_interest")}:</strong> {format_currency(best_net)}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
-clean_ranking_display = build_clean_ranking_table(
-    ranking=ranking,
-    lang=lang,
-    bank_col=bank_col_r,
-    product_col=product_col_r,
-    maturity_col=maturity_col_r,
-    tanb_col=tanb_col_r,
-    net_interest_col=net_interest_col,
-    final_amount_col=final_amount_col,
-    alerts_col=alerts_col,
-)
+    st.markdown(f"## {translate(lang, 'selected_deposit_simulation')}")
 
-st.dataframe(
-    clean_ranking_display,
-    use_container_width=True,
-    hide_index=True,
-)
+    selection_df = ranking.copy().reset_index(drop=True)
 
-with st.expander(translate(lang, "show_full_table")):
+    def build_deposit_label(row: pd.Series) -> str:
+        bank_name = get_series_value(row, bank_col_r)
+        product_name = get_series_value(row, product_col_r)
+        tanb_value = format_percentage(get_series_value(row, tanb_col_r)) if tanb_col_r else "N/A"
+        net_value = format_currency(get_series_value(row, net_interest_col)) if net_interest_col else "N/A"
+
+        return f"{bank_name} — {product_name} | TANB {tanb_value} | {translate(lang, 'net_interest')} {net_value}"
+
+    selection_df["Deposit Selection Label"] = selection_df.apply(build_deposit_label, axis=1)
+
+    selected_label = st.selectbox(
+        translate(lang, "select_deposit"),
+        options=selection_df["Deposit Selection Label"].tolist(),
+        index=0,
+    )
+
+    selected_index = selection_df.index[
+        selection_df["Deposit Selection Label"] == selected_label
+    ][0]
+
+    selected_deposit = selection_df.iloc[selected_index]
+
+    selected_bank_name = get_series_value(selected_deposit, bank_col_r)
+    selected_product_name = get_series_value(selected_deposit, product_col_r)
+    selected_tanb = get_series_value(selected_deposit, tanb_col_r)
+    selected_net_interest = get_series_value(selected_deposit, net_interest_col)
+    selected_final_amount = get_series_value(selected_deposit, final_amount_col)
+
+    st.markdown(
+        f"""
+        <div class="simulation-card">
+            <div class="card-title">{selected_bank_name} — {selected_product_name}</div>
+            <div class="card-line"><strong>{translate(lang, "capital")}:</strong> {format_currency(capital)}</div>
+            <div class="card-line"><strong>{translate(lang, "maturity")}:</strong> {maturity_months} {translate(lang, "months")}</div>
+            <div class="card-line"><strong>TANB:</strong> {format_percentage(selected_tanb)}</div>
+            <div class="card-line"><strong>{translate(lang, "estimated_net_interest")}:</strong> {format_currency(selected_net_interest)}</div>
+            <div class="card-line"><strong>{translate(lang, "estimated_final_amount")}:</strong> {format_currency(selected_final_amount)}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    st.markdown(f"## {translate(lang, 'ranking_results')}")
+    st.markdown(translate(lang, "ranking_intro"))
+
+    clean_ranking_display = build_clean_ranking_table(
+        ranking=ranking,
+        lang=lang,
+        bank_col=bank_col_r,
+        product_col=product_col_r,
+        maturity_col=maturity_col_r,
+        tanb_col=tanb_col_r,
+        net_interest_col=net_interest_col,
+        final_amount_col=final_amount_col,
+        alerts_col=alerts_col,
+    )
+
     st.dataframe(
-        ranking,
+        clean_ranking_display,
         use_container_width=True,
         hide_index=True,
     )
 
-
-# ------------------------------------------------------------
-# Chart
-# ------------------------------------------------------------
-
-if net_interest_col and product_col_r:
-    st.markdown(f"## {translate(lang, 'net_interest_comparison')}")
-
-    chart_df = ranking.copy()
-
-    if bank_col_r:
-        chart_df["Display Label"] = (
-            chart_df[bank_col_r].astype(str)
-            + " — "
-            + chart_df[product_col_r].astype(str)
+    with st.expander(translate(lang, "show_full_table")):
+        st.dataframe(
+            ranking,
+            use_container_width=True,
+            hide_index=True,
         )
-    else:
-        chart_df["Display Label"] = chart_df[product_col_r].astype(str)
 
-    chart_df = chart_df.sort_values(net_interest_col, ascending=True)
+    if net_interest_col and product_col_r:
+        st.markdown(f"## {translate(lang, 'net_interest_comparison')}")
 
-    hover_data = []
+        chart_df = ranking.copy()
 
-    if tanb_col_r:
-        hover_data.append(tanb_col_r)
+        if bank_col_r:
+            chart_df["Display Label"] = (
+                chart_df[bank_col_r].astype(str)
+                + " — "
+                + chart_df[product_col_r].astype(str)
+            )
+        else:
+            chart_df["Display Label"] = chart_df[product_col_r].astype(str)
 
-    if final_amount_col:
-        hover_data.append(final_amount_col)
+        chart_df["Short Label"] = chart_df["Display Label"].apply(lambda x: truncate_text(x, 55))
+        chart_df = chart_df.sort_values(net_interest_col, ascending=True)
 
-    if alerts_col:
-        hover_data.append(alerts_col)
+        hover_data = ["Display Label"]
 
-    fig = px.bar(
-        chart_df,
-        x=net_interest_col,
-        y="Display Label",
-        orientation="h",
-        title=translate(lang, "chart_title"),
-        labels={
-            net_interest_col: translate(lang, "estimated_net_interest"),
-            "Display Label": translate(lang, "deposit_product"),
-        },
-        hover_data=hover_data if hover_data else None,
-    )
+        if tanb_col_r:
+            hover_data.append(tanb_col_r)
 
-    fig.update_layout(
-        height=max(400, len(chart_df) * 45),
-        showlegend=False,
-        margin=dict(l=20, r=20, t=60, b=20),
-    )
-
-    st.plotly_chart(fig, use_container_width=True)
-
-
-# ------------------------------------------------------------
-# Product details, notes and official sources
-# ------------------------------------------------------------
-
-st.markdown(f"## {translate(lang, 'product_details')}")
-
-st.caption(f"**{translate(lang, 'technical_note')}:** {translate(lang, 'dataset_language_note')}")
-
-for _, row in ranking.iterrows():
-    bank_name = get_series_value(row, bank_col_r)
-    product_name = get_series_value(row, product_col_r)
-
-    with st.expander(f"{bank_name} — {product_name}"):
-        detail_col1, detail_col2, detail_col3 = st.columns(3)
-
-        with detail_col1:
-            if tanb_col_r:
-                st.metric("TANB", format_percentage(get_series_value(row, tanb_col_r)))
-            if maturity_col_r:
-                st.write(f"**{translate(lang, 'maturity')}:** {get_series_value(row, maturity_col_r)} {translate(lang, 'months')}")
-
-        with detail_col2:
-            if gross_interest_col:
-                st.metric(
-                    translate(lang, "estimated_gross_interest"),
-                    format_currency(get_series_value(row, gross_interest_col)),
-                )
-            if tax_col:
-                st.metric(
-                    translate(lang, "estimated_tax"),
-                    format_currency(get_series_value(row, tax_col)),
-                )
-
-        with detail_col3:
-            if net_interest_col:
-                st.metric(
-                    translate(lang, "estimated_net_interest"),
-                    format_currency(get_series_value(row, net_interest_col)),
-                )
-            if final_amount_col:
-                st.metric(
-                    translate(lang, "estimated_final_amount"),
-                    format_currency(get_series_value(row, final_amount_col)),
-                )
+        if final_amount_col:
+            hover_data.append(final_amount_col)
 
         if alerts_col:
-            st.write(f"**{translate(lang, 'alerts')}:**")
-            st.write(get_series_value(row, alerts_col, "No alerts"))
+            hover_data.append(alerts_col)
 
-        if notes_col:
-            st.write(f"**{translate(lang, 'notes_conditions')}:**")
-            st.write(get_series_value(row, notes_col, "No notes available"))
+        fig = px.bar(
+            chart_df,
+            x=net_interest_col,
+            y="Short Label",
+            orientation="h",
+            title=translate(lang, "chart_title"),
+            labels={
+                net_interest_col: translate(lang, "estimated_net_interest"),
+                "Short Label": translate(lang, "deposit_product"),
+            },
+            hover_data=hover_data,
+            text=net_interest_col,
+        )
 
-        if source_col:
-            source_value = get_series_value(row, source_col, "")
-            if pd.notna(source_value) and str(source_value).strip():
-                st.write(f"**{translate(lang, 'official_source')}:**")
-                st.write(source_value)
+        fig.update_traces(
+            texttemplate="%{x:.2f} €",
+            textposition="outside",
+            cliponaxis=False,
+        )
+
+        fig.update_layout(
+            height=max(420, len(chart_df) * 55),
+            showlegend=False,
+            margin=dict(l=20, r=90, t=60, b=20),
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
 
 
 # ------------------------------------------------------------
-# Downloads
+# Validation tab
 # ------------------------------------------------------------
 
-st.markdown(f"## {translate(lang, 'downloads')}")
+with validation_tab:
+    st.markdown(f"## {translate(lang, 'data_quality')}")
 
-download_col1, download_col2 = st.columns(2)
+    st.markdown(
+        f"""
+        {translate(lang, "data_quality_intro")}
 
-with download_col1:
-    csv_data = ranking.to_csv(index=False).encode("utf-8-sig")
-
-    st.download_button(
-        label=translate(lang, "download_csv"),
-        data=csv_data,
-        file_name="term_deposit_ranking.csv",
-        mime="text/csv",
+        {translate(lang, "data_quality_note")}
+        """
     )
 
-with download_col2:
-    excel_data = to_excel_bytes(ranking)
+    dq_col1, dq_col2, dq_col3 = st.columns(3)
 
-    st.download_button(
-        label=translate(lang, "download_excel"),
-        data=excel_data,
-        file_name="term_deposit_ranking.xlsx",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    )
+    with dq_col1:
+        st.metric(
+            label=translate(lang, "dataset_reference_date"),
+            value=metadata.get("reference_date", "Not available"),
+        )
+
+    with dq_col2:
+        st.metric(
+            label=translate(lang, "last_manual_validation"),
+            value=metadata.get("last_manual_validation", "Not available"),
+        )
+
+    with dq_col3:
+        st.metric(
+            label=translate(lang, "validation_status"),
+            value=translate(lang, "human_reviewed"),
+        )
+
+    dq_col4, dq_col5 = st.columns(2)
+
+    with dq_col4:
+        st.info(
+            f"""
+            **{translate(lang, "official_source_tracking")}:** {translate(lang, "enabled")}  
+            {translate(lang, "official_source_tracking_text")}
+            """
+        )
+
+    with dq_col5:
+        st.success(
+            f"""
+            **{translate(lang, "human_validation_workflow")}:** {translate(lang, "enabled")}  
+            {translate(lang, "human_validation_workflow_text")}
+            """
+        )
+
+    st.caption(f"**{translate(lang, 'technical_note')}:** {translate(lang, 'dataset_language_note')}")
+
+    with st.expander(translate(lang, "workflow_expander")):
+        st.markdown(
+            """
+            ```text
+            Official bank sources
+                    ↓
+            Source monitoring script
+                    ↓
+            Validation report
+                    ↓
+            Human review
+                    ↓
+            Manual dataset update
+                    ↓
+            Streamlit app uses validated data only
+            ```
+
+            ```bash
+            scripts/monitor_sources.py
+            ```
+
+            ```bash
+            data/source_links.csv
+            ```
+
+            ```bash
+            validation/
+            ```
+            """
+        )
+
+
+# ------------------------------------------------------------
+# Details tab
+# ------------------------------------------------------------
+
+with details_tab:
+    st.markdown(f"## {translate(lang, 'product_details')}")
+
+    st.caption(f"**{translate(lang, 'technical_note')}:** {translate(lang, 'dataset_language_note')}")
+
+    for _, row in ranking.iterrows():
+        bank_name = get_series_value(row, bank_col_r)
+        product_name = get_series_value(row, product_col_r)
+
+        with st.expander(f"{bank_name} — {product_name}"):
+            detail_col1, detail_col2, detail_col3 = st.columns(3)
+
+            with detail_col1:
+                if tanb_col_r:
+                    st.metric("TANB", format_percentage(get_series_value(row, tanb_col_r)))
+                if maturity_col_r:
+                    st.write(
+                        f"**{translate(lang, 'maturity')}:** "
+                        f"{get_series_value(row, maturity_col_r)} {translate(lang, 'months')}"
+                    )
+
+            with detail_col2:
+                if gross_interest_col:
+                    st.metric(
+                        translate(lang, "estimated_gross_interest"),
+                        format_currency(get_series_value(row, gross_interest_col)),
+                    )
+                if tax_col:
+                    st.metric(
+                        translate(lang, "estimated_tax"),
+                        format_currency(get_series_value(row, tax_col)),
+                    )
+
+            with detail_col3:
+                if net_interest_col:
+                    st.metric(
+                        translate(lang, "estimated_net_interest"),
+                        format_currency(get_series_value(row, net_interest_col)),
+                    )
+                if final_amount_col:
+                    st.metric(
+                        translate(lang, "estimated_final_amount"),
+                        format_currency(get_series_value(row, final_amount_col)),
+                    )
+
+            if alerts_col:
+                st.write(f"**{translate(lang, 'alerts')}:**")
+                st.write(get_series_value(row, alerts_col, "No alerts"))
+
+            if notes_col:
+                st.write(f"**{translate(lang, 'notes_conditions')}:**")
+                st.write(get_series_value(row, notes_col, "No notes available"))
+
+            if source_col:
+                source_value = get_series_value(row, source_col, "")
+                if pd.notna(source_value) and str(source_value).strip():
+                    st.write(f"**{translate(lang, 'official_source')}:**")
+                    st.write(source_value)
+
+    st.markdown(f"## {translate(lang, 'downloads')}")
+
+    download_col1, download_col2 = st.columns(2)
+
+    with download_col1:
+        csv_data = ranking.to_csv(index=False).encode("utf-8-sig")
+
+        st.download_button(
+            label=translate(lang, "download_csv"),
+            data=csv_data,
+            file_name="term_deposit_ranking.csv",
+            mime="text/csv",
+        )
+
+    with download_col2:
+        excel_data = to_excel_bytes(ranking)
+
+        st.download_button(
+            label=translate(lang, "download_excel"),
+            data=excel_data,
+            file_name="term_deposit_ranking.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
 
 
 # ------------------------------------------------------------
