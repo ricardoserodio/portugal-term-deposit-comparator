@@ -71,11 +71,24 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+st.info(
+    """
+    **Data reference date:** 05 May 2026  
+    **Dataset status:** Manually curated and partially validated against official sources.  
+    **Market scope:** Portuguese banks, banks with physical/established presence in Portugal, and selected online banks relevant to Portuguese residents.  
+
+    This dataset may not reflect real-time changes in deposit rates, conditions or eligibility criteria.
+    """
+)
+
 st.warning(
     """
-    This tool is for educational and informational purposes only.
-    It does not constitute financial advice. Always confirm deposit conditions
-    directly with the official bank documentation before making any decision.
+    **Disclaimer:** This tool is for educational and informational purposes only.  
+
+    It does not constitute financial advice, investment advice, tax advice or a recommendation to subscribe to any financial product.  
+
+    Deposit rates, conditions, eligibility criteria, tax treatment and account costs may change at any time.  
+    Always confirm the latest information directly with the official bank documentation before making any financial decision.
     """
 )
 
@@ -365,5 +378,5 @@ else:
     )
 
 st.caption(
-    "Prototype built with Python, pandas, Plotly and Streamlit. Data should be validated against official bank sources."
+    "Prototype built with Python, pandas, Plotly and Streamlit. Dataset is manually curated and may not reflect real-time product changes."
 )
