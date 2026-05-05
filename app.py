@@ -10,7 +10,7 @@ from src.calculator import load_data, prepare_data, compare_deposits
 
 
 # ------------------------------------------------------------
-# Paths and metadata
+# Paths and links
 # ------------------------------------------------------------
 
 METADATA_PATH = Path("data/metadata.json")
@@ -104,6 +104,9 @@ TEXT = {
         "live_app": "Live App",
         "github_repo": "GitHub Repository",
         "technical_note": "Technical note",
+        "enabled": "Enabled",
+        "months": "months",
+        "product": "Product",
     },
     "pt": {
         "language": "Idioma",
@@ -185,9 +188,16 @@ TEXT = {
         "live_app": "App online",
         "github_repo": "Repositório GitHub",
         "technical_note": "Nota técnica",
+        "enabled": "Ativo",
+        "months": "meses",
+        "product": "Produto",
     },
 }
 
+
+# ------------------------------------------------------------
+# Translation helpers
+# ------------------------------------------------------------
 
 def get_language_code(language_label: str) -> str:
     """Map selected language label to internal language code."""
@@ -200,7 +210,7 @@ def translate(lang: str, key: str) -> str:
 
 
 # ------------------------------------------------------------
-# Load metadata
+# Metadata loader
 # ------------------------------------------------------------
 
 def load_metadata(path: Path = METADATA_PATH) -> dict:
@@ -233,6 +243,13 @@ def find_column(df: pd.DataFrame, candidates: list[str]) -> str | None:
         if col in df.columns:
             return col
     return None
+
+
+def get_series_value(row: pd.Series, column_name: str | None, default: str = "N/A"):
+    """Safely get a value from a pandas Series."""
+    if column_name and column_name in row.index:
+        return row[column_name]
+    return default
 
 
 def to_excel_bytes(df: pd.DataFrame) -> bytes:
@@ -301,10 +318,12 @@ def build_clean_ranking_table(
         display_df[translate(lang, "bank")] = ranking[bank_col]
 
     if product_col:
-        display_df["Product" if lang == "en" else "Produto"] = ranking[product_col]
+        display_df[translate(lang, "product")] = ranking[product_col]
 
     if maturity_col:
-        display_df[translate(lang, "maturity")] = ranking[maturity_col].astype(str) + " months"
+        display_df[translate(lang, "maturity")] = (
+            ranking[maturity_col].astype(str) + f" {translate(lang, 'months')}"
+        )
 
     if tanb_col:
         display_df["TANB"] = ranking[tanb_col].apply(format_percentage)
@@ -683,7 +702,7 @@ dq_col4, dq_col5 = st.columns(2)
 with dq_col4:
     st.info(
         f"""
-        **{translate(lang, "official_source_tracking")}:** Enabled  
+        **{translate(lang, "official_source_tracking")}:** {translate(lang, "enabled")}  
         {translate(lang, "official_source_tracking_text")}
         """
     )
@@ -691,7 +710,7 @@ with dq_col4:
 with dq_col5:
     st.success(
         f"""
-        **{translate(lang, "human_validation_workflow")}:** Enabled  
+        **{translate(lang, "human_validation_workflow")}:** {translate(lang, "enabled")}  
         {translate(lang, "human_validation_workflow_text")}
         """
     )
@@ -875,7 +894,7 @@ with summary_col4:
 summary_col5, summary_col6, summary_col7, summary_col8 = st.columns(4)
 
 with summary_col5:
-    st.metric(translate(lang, "maturity"), f"{maturity_months} months")
+    st.metric(translate(lang, "maturity"), f"{maturity_months} {translate(lang, 'months')}")
 
 with summary_col6:
     st.metric(translate(lang, "bank_filter"), selected_bank_display)
@@ -900,10 +919,10 @@ selection_df = ranking.copy().reset_index(drop=True)
 
 
 def build_deposit_label(row: pd.Series) -> str:
-    bank_name = row.get(bank_col_r, "N/A") if bank_col_r else "N/A"
-    product_name = row.get(product_col_r, "N/A") if product_col_r else "N/A"
-    tanb_value = format_percentage(row.get(tanb_col_r)) if tanb_col_r else "N/A"
-    net_value = format_currency(row.get(net_interest_col)) if net_interest_col else "N/A"
+    bank_name = get_series_value(row, bank_col_r)
+    product_name = get_series_value(row, product_col_r)
+    tanb_value = format_percentage(get_series_value(row, tanb_col_r)) if tanb_col_r else "N/A"
+    net_value = format_currency(get_series_value(row, net_interest_col)) if net_interest_col else "N/A"
 
     return f"{bank_name} — {product_name} | TANB {tanb_value} | {translate(lang, 'net_interest')} {net_value}"
 
@@ -916,10 +935,227 @@ selected_label = st.selectbox(
     index=0,
 )
 
-selected_index = selection_df[
+selected_index = selection_df.index[
     selection_df["Deposit Selection Label"] == selected_label
-].index[0]
+][0]
 
-selected_deposit = selection_df.loc[selected_index]
+selected_deposit = selection_df.iloc[selected_index]
 
-selected_bank_name = selected_deposit._
+selected_bank_name = get_series_value(selected_deposit, bank_col_r)
+selected_product_name = get_series_value(selected_deposit, product_col_r)
+selected_tanb = get_series_value(selected_deposit, tanb_col_r)
+selected_net_interest = get_series_value(selected_deposit, net_interest_col)
+selected_final_amount = get_series_value(selected_deposit, final_amount_col)
+
+st.markdown(
+    f"""
+    <div class="simulation-card">
+        <div class="card-title">{selected_bank_name} — {selected_product_name}</div>
+        <div class="card-line"><strong>{translate(lang, "capital")}:</strong> {format_currency(capital)}</div>
+        <div class="card-line"><strong>{translate(lang, "maturity")}:</strong> {maturity_months} {translate(lang, "months")}</div>
+        <div class="card-line"><strong>TANB:</strong> {format_percentage(selected_tanb)}</div>
+        <div class="card-line"><strong>{translate(lang, "estimated_net_interest")}:</strong> {format_currency(selected_net_interest)}</div>
+        <div class="card-line"><strong>{translate(lang, "estimated_final_amount")}:</strong> {format_currency(selected_final_amount)}</div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+# ------------------------------------------------------------
+# Ranking results
+# ------------------------------------------------------------
+
+st.markdown(f"## {translate(lang, 'ranking_results')}")
+
+st.markdown(translate(lang, "ranking_intro"))
+
+clean_ranking_display = build_clean_ranking_table(
+    ranking=ranking,
+    lang=lang,
+    bank_col=bank_col_r,
+    product_col=product_col_r,
+    maturity_col=maturity_col_r,
+    tanb_col=tanb_col_r,
+    net_interest_col=net_interest_col,
+    final_amount_col=final_amount_col,
+    alerts_col=alerts_col,
+)
+
+st.dataframe(
+    clean_ranking_display,
+    use_container_width=True,
+    hide_index=True,
+)
+
+with st.expander(translate(lang, "show_full_table")):
+    st.dataframe(
+        ranking,
+        use_container_width=True,
+        hide_index=True,
+    )
+
+
+# ------------------------------------------------------------
+# Chart
+# ------------------------------------------------------------
+
+if net_interest_col and product_col_r:
+    st.markdown(f"## {translate(lang, 'net_interest_comparison')}")
+
+    chart_df = ranking.copy()
+
+    if bank_col_r:
+        chart_df["Display Label"] = (
+            chart_df[bank_col_r].astype(str)
+            + " — "
+            + chart_df[product_col_r].astype(str)
+        )
+    else:
+        chart_df["Display Label"] = chart_df[product_col_r].astype(str)
+
+    chart_df = chart_df.sort_values(net_interest_col, ascending=True)
+
+    hover_data = []
+
+    if tanb_col_r:
+        hover_data.append(tanb_col_r)
+
+    if final_amount_col:
+        hover_data.append(final_amount_col)
+
+    if alerts_col:
+        hover_data.append(alerts_col)
+
+    fig = px.bar(
+        chart_df,
+        x=net_interest_col,
+        y="Display Label",
+        orientation="h",
+        title=translate(lang, "chart_title"),
+        labels={
+            net_interest_col: translate(lang, "estimated_net_interest"),
+            "Display Label": translate(lang, "deposit_product"),
+        },
+        hover_data=hover_data if hover_data else None,
+    )
+
+    fig.update_layout(
+        height=max(400, len(chart_df) * 45),
+        showlegend=False,
+        margin=dict(l=20, r=20, t=60, b=20),
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+
+# ------------------------------------------------------------
+# Product details, notes and official sources
+# ------------------------------------------------------------
+
+st.markdown(f"## {translate(lang, 'product_details')}")
+
+st.caption(f"**{translate(lang, 'technical_note')}:** {translate(lang, 'dataset_language_note')}")
+
+for _, row in ranking.iterrows():
+    bank_name = get_series_value(row, bank_col_r)
+    product_name = get_series_value(row, product_col_r)
+
+    with st.expander(f"{bank_name} — {product_name}"):
+        detail_col1, detail_col2, detail_col3 = st.columns(3)
+
+        with detail_col1:
+            if tanb_col_r:
+                st.metric("TANB", format_percentage(get_series_value(row, tanb_col_r)))
+            if maturity_col_r:
+                st.write(f"**{translate(lang, 'maturity')}:** {get_series_value(row, maturity_col_r)} {translate(lang, 'months')}")
+
+        with detail_col2:
+            if gross_interest_col:
+                st.metric(
+                    translate(lang, "estimated_gross_interest"),
+                    format_currency(get_series_value(row, gross_interest_col)),
+                )
+            if tax_col:
+                st.metric(
+                    translate(lang, "estimated_tax"),
+                    format_currency(get_series_value(row, tax_col)),
+                )
+
+        with detail_col3:
+            if net_interest_col:
+                st.metric(
+                    translate(lang, "estimated_net_interest"),
+                    format_currency(get_series_value(row, net_interest_col)),
+                )
+            if final_amount_col:
+                st.metric(
+                    translate(lang, "estimated_final_amount"),
+                    format_currency(get_series_value(row, final_amount_col)),
+                )
+
+        if alerts_col:
+            st.write(f"**{translate(lang, 'alerts')}:**")
+            st.write(get_series_value(row, alerts_col, "No alerts"))
+
+        if notes_col:
+            st.write(f"**{translate(lang, 'notes_conditions')}:**")
+            st.write(get_series_value(row, notes_col, "No notes available"))
+
+        if source_col:
+            source_value = get_series_value(row, source_col, "")
+            if pd.notna(source_value) and str(source_value).strip():
+                st.write(f"**{translate(lang, 'official_source')}:**")
+                st.write(source_value)
+
+
+# ------------------------------------------------------------
+# Downloads
+# ------------------------------------------------------------
+
+st.markdown(f"## {translate(lang, 'downloads')}")
+
+download_col1, download_col2 = st.columns(2)
+
+with download_col1:
+    csv_data = ranking.to_csv(index=False).encode("utf-8-sig")
+
+    st.download_button(
+        label=translate(lang, "download_csv"),
+        data=csv_data,
+        file_name="term_deposit_ranking.csv",
+        mime="text/csv",
+    )
+
+with download_col2:
+    excel_data = to_excel_bytes(ranking)
+
+    st.download_button(
+        label=translate(lang, "download_excel"),
+        data=excel_data,
+        file_name="term_deposit_ranking.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+
+# ------------------------------------------------------------
+# Footer
+# ------------------------------------------------------------
+
+st.divider()
+
+st.markdown(
+    f"""
+    <div class="footer-box">
+        <div class="small-muted">
+            {translate(lang, "footer_built")}<br>
+            {translate(lang, "dataset_reference_date")}: {metadata.get("reference_date", "Not available")} |
+            {translate(lang, "last_manual_validation")}: {metadata.get("last_manual_validation", "Not available")}<br><br>
+            🔗 <a href="{LIVE_APP_URL}" target="_blank">{translate(lang, "live_app")}</a> |
+            💻 <a href="{GITHUB_URL}" target="_blank">{translate(lang, "github_repo")}</a><br><br>
+            {translate(lang, "footer_warning")}
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
