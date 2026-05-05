@@ -39,6 +39,7 @@ The project intentionally excludes broad EU digital-only banks without a clear f
 ## Current Features
 
 - Cleaned dataset of Portuguese term deposits
+- Dataset metadata and validation status display
 - Filtering by investment amount
 - Filtering by maturity
 - Bank-level filtering
@@ -86,6 +87,28 @@ The dataset includes fields such as:
 - Reference date
 
 The dataset was manually cleaned and structured from publicly available term deposit information and quickly validated against official bank sources where possible.
+
+---
+
+## Dataset Metadata
+
+The project includes a metadata file:
+
+`data/metadata.json`
+
+This file stores key information used by the Streamlit app, including:
+
+- Dataset name
+- Data reference date
+- Last manual validation date
+- Validation status
+- Market scope
+- Real-time data warning
+- Disclaimer text
+
+This allows the app to display clear dataset status information without hardcoding dates or disclaimers directly in the application code.
+
+The Streamlit app reads this metadata file automatically and displays the information at the top of the interface.
 
 ---
 
@@ -163,7 +186,8 @@ portugal-term-deposit-comparator/
 │
 ├── app.py
 ├── data/
-│   └── depositos_prazo_core_portugal_corrigido.csv
+│   ├── depositos_prazo_core_portugal_corrigido.csv
+│   └── metadata.json
 │
 ├── examples/
 │   ├── basic_usage.py
@@ -248,6 +272,8 @@ The app allows users to simulate term deposit rankings using:
 
 The app also includes:
 
+- Dataset reference date and validation status
+- Strong visible disclaimer
 - Simulation summary
 - Ranking table
 - Interactive horizontal chart with Plotly
@@ -376,6 +402,7 @@ Important limitations:
 - The tax calculation is simplified and assumes a standard 28% withholding tax.
 - The project does not account for all possible tax situations or exemptions.
 - The dataset may not reflect real-time product changes.
+- The metadata status does not replace validation against official bank documentation.
 
 ---
 
@@ -412,7 +439,7 @@ Planned improvements include:
 
 `MVP completed`
 
-The current version includes a cleaned dataset, financial calculation logic, a reusable Python module, a basic usage example, CSV and Excel export functionality, a Streamlit simulator app, an interactive Plotly chart and a visual selected deposit simulation panel.
+The current version includes a cleaned dataset, dataset metadata, financial calculation logic, a reusable Python module, a basic usage example, CSV and Excel export functionality, a Streamlit simulator app, an interactive Plotly chart and a visual selected deposit simulation panel.
 
 ---
 
