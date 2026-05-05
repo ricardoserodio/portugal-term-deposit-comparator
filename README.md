@@ -7,6 +7,8 @@
 ![Data Governance](https://img.shields.io/badge/Data%20Governance-Human%20Validation-green)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green)
 
+🔗 **Live App:** https://pt-deposit-comparator.streamlit.app
+
 A Python-based tool to compare Portuguese term deposits by estimated net yield, maturity, eligibility criteria and liquidity conditions.
 
 This project was created as a practical banking and data analysis mini-project, combining financial product analysis, Python, pandas, Streamlit, Plotly, Google Colab and a human-in-the-loop validation workflow.
