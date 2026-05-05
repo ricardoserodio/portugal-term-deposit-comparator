@@ -15,6 +15,9 @@ from src.calculator import load_data, prepare_data, compare_deposits
 
 METADATA_PATH = Path("data/metadata.json")
 
+GITHUB_URL = "https://github.com/ricardoserodio/portugal-term-deposit-comparator"
+LIVE_APP_URL = "https://pt-deposit-comparator.streamlit.app"
+
 
 def load_metadata(path: Path = METADATA_PATH) -> dict:
     """Load dataset metadata used for app status and disclaimer."""
@@ -74,6 +77,65 @@ def format_percentage(value) -> str:
         return "N/A"
 
 
+def is_clean_alert(value) -> bool:
+    """
+    Conservative filter for products without relevant alerts.
+    Treats empty, none, no alerts and similar labels as clean.
+    """
+    if pd.isna(value):
+        return True
+
+    text = str(value).strip().lower()
+
+    clean_values = [
+        "",
+        "no alerts",
+        "sem alertas",
+        "none",
+        "n/a",
+        "nan",
+    ]
+
+    return text in clean_values
+
+
+def build_clean_ranking_table(
+    ranking: pd.DataFrame,
+    bank_col: str | None,
+    product_col: str | None,
+    maturity_col: str | None,
+    tanb_col: str | None,
+    net_interest_col: str | None,
+    final_amount_col: str | None,
+    alerts_col: str | None,
+) -> pd.DataFrame:
+    """Build a clean ranking table for the main app view."""
+    display_df = pd.DataFrame()
+
+    if bank_col:
+        display_df["Bank"] = ranking[bank_col]
+
+    if product_col:
+        display_df["Product"] = ranking[product_col]
+
+    if maturity_col:
+        display_df["Maturity"] = ranking[maturity_col].astype(str) + " months"
+
+    if tanb_col:
+        display_df["TANB"] = ranking[tanb_col].apply(format_percentage)
+
+    if net_interest_col:
+        display_df["Estimated Net Interest"] = ranking[net_interest_col].apply(format_currency)
+
+    if final_amount_col:
+        display_df["Estimated Final Amount"] = ranking[final_amount_col].apply(format_currency)
+
+    if alerts_col:
+        display_df["Alerts"] = ranking[alerts_col]
+
+    return display_df
+
+
 # ------------------------------------------------------------
 # Page configuration
 # ------------------------------------------------------------
@@ -128,6 +190,44 @@ st.markdown(
         font-size: 15px;
         margin-bottom: 6px;
     }
+
+    .highlight-card {
+        background-color: #0F172A;
+        border: 1px solid #334155;
+        border-radius: 16px;
+        padding: 20px;
+        min-height: 155px;
+        margin-bottom: 10px;
+    }
+
+    .highlight-icon {
+        font-size: 26px;
+        margin-bottom: 8px;
+    }
+
+    .highlight-title {
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .highlight-text {
+        font-size: 14px;
+        color: #CBD5E1;
+        line-height: 1.45;
+    }
+
+    .footer-box {
+        background-color: #0F172A;
+        border: 1px solid #334155;
+        border-radius: 14px;
+        padding: 16px;
+        margin-top: 20px;
+    }
+
+    a {
+        text-decoration: none;
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -149,6 +249,12 @@ df = prepare_data(df)
 # ------------------------------------------------------------
 
 st.sidebar.header("Simulation Inputs")
+
+app_mode = st.sidebar.radio(
+    "App mode",
+    options=["Simple", "Advanced"],
+    index=0,
+)
 
 capital = st.sidebar.number_input(
     "Capital to invest (€)",
@@ -182,20 +288,34 @@ selected_bank = st.sidebar.selectbox(
     options=available_banks,
 )
 
-require_early_withdrawal = st.sidebar.checkbox(
-    "Require early withdrawal option",
-    value=False,
-)
+if app_mode == "Advanced":
+    st.sidebar.subheader("Advanced Filters")
 
-accept_new_clients_only = st.sidebar.checkbox(
-    "Accept products for new clients only",
-    value=True,
-)
+    require_early_withdrawal = st.sidebar.checkbox(
+        "Require early withdrawal option",
+        value=False,
+    )
 
-accept_new_money_only = st.sidebar.checkbox(
-    "Accept products for new money only",
-    value=True,
-)
+    accept_new_clients_only = st.sidebar.checkbox(
+        "Accept products for new clients only",
+        value=True,
+    )
+
+    accept_new_money_only = st.sidebar.checkbox(
+        "Accept products for new money only",
+        value=True,
+    )
+
+    show_only_without_relevant_alerts = st.sidebar.checkbox(
+        "Show only products without relevant alerts",
+        value=False,
+    )
+
+else:
+    require_early_withdrawal = False
+    accept_new_clients_only = True
+    accept_new_money_only = True
+    show_only_without_relevant_alerts = False
 
 top_n = st.sidebar.slider(
     "Number of results",
@@ -268,35 +388,59 @@ st.markdown("## Project Highlights")
 highlight_col1, highlight_col2, highlight_col3, highlight_col4 = st.columns(4)
 
 with highlight_col1:
-    st.info(
+    st.markdown(
         """
-        **Banking Analytics**  
-        Compares Portuguese term deposits using financial product criteria.
-        """
+        <div class="highlight-card">
+            <div class="highlight-icon">🏦</div>
+            <div class="highlight-title">Banking Analytics</div>
+            <div class="highlight-text">
+            Compares Portuguese term deposits using financial product criteria.
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
 with highlight_col2:
-    st.success(
+    st.markdown(
         """
-        **Net Yield Simulation**  
-        Estimates gross interest, tax impact, net interest and final amount.
-        """
+        <div class="highlight-card">
+            <div class="highlight-icon">📈</div>
+            <div class="highlight-title">Net Yield Simulation</div>
+            <div class="highlight-text">
+            Estimates gross interest, tax impact, net interest and final amount.
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
 with highlight_col3:
-    st.warning(
+    st.markdown(
         """
-        **Eligibility Alerts**  
-        Flags new client rules, new money requirements and liquidity conditions.
-        """
+        <div class="highlight-card">
+            <div class="highlight-icon">⚠️</div>
+            <div class="highlight-title">Eligibility Alerts</div>
+            <div class="highlight-text">
+            Flags new client rules, new money requirements and liquidity conditions.
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
 with highlight_col4:
-    st.info(
+    st.markdown(
         """
-        **Human Validation**  
-        Uses official source tracking and manual review before dataset updates.
-        """
+        <div class="highlight-card">
+            <div class="highlight-icon">✅</div>
+            <div class="highlight-title">Human Validation</div>
+            <div class="highlight-text">
+            Uses official source tracking and manual review before dataset updates.
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
 st.divider()
@@ -414,7 +558,7 @@ ranking = compare_deposits(
 
 
 # ------------------------------------------------------------
-# Empty state
+# Empty state after first filtering
 # ------------------------------------------------------------
 
 if ranking is None or ranking.empty:
@@ -485,10 +629,37 @@ source_col = find_column(
 
 
 # ------------------------------------------------------------
-# Simulation summary
+# Optional alert filtering
+# ------------------------------------------------------------
+
+if show_only_without_relevant_alerts and alerts_col:
+    ranking = ranking[ranking[alerts_col].apply(is_clean_alert)].copy()
+
+if ranking.empty:
+    st.error("No deposits found after applying the alert filter.")
+    st.stop()
+
+
+# ------------------------------------------------------------
+# Simulation summary and KPI cards
 # ------------------------------------------------------------
 
 st.markdown("## Simulation Summary")
+
+best_net_interest_value = None
+average_net_interest_value = None
+best_tanb_value = None
+
+if net_interest_col:
+    net_series = pd.to_numeric(ranking[net_interest_col], errors="coerce")
+    if not net_series.dropna().empty:
+        best_net_interest_value = net_series.max()
+        average_net_interest_value = net_series.mean()
+
+if tanb_col_r:
+    tanb_series = pd.to_numeric(ranking[tanb_col_r], errors="coerce")
+    if not tanb_series.dropna().empty:
+        best_tanb_value = tanb_series.max()
 
 summary_col1, summary_col2, summary_col3, summary_col4 = st.columns(4)
 
@@ -496,13 +667,36 @@ with summary_col1:
     st.metric("Capital", format_currency(capital))
 
 with summary_col2:
-    st.metric("Maturity", f"{maturity_months} months")
+    st.metric("Eligible Results", len(ranking))
 
 with summary_col3:
-    st.metric("Bank Filter", selected_bank)
+    st.metric(
+        "Best Net Interest",
+        format_currency(best_net_interest_value) if best_net_interest_value is not None else "N/A",
+    )
 
 with summary_col4:
-    st.metric("Eligible Results", len(ranking))
+    st.metric(
+        "Average Net Interest",
+        format_currency(average_net_interest_value) if average_net_interest_value is not None else "N/A",
+    )
+
+summary_col5, summary_col6, summary_col7, summary_col8 = st.columns(4)
+
+with summary_col5:
+    st.metric("Maturity", f"{maturity_months} months")
+
+with summary_col6:
+    st.metric("Bank Filter", selected_bank)
+
+with summary_col7:
+    st.metric(
+        "Best TANB",
+        format_percentage(best_tanb_value) if best_tanb_value is not None else "N/A",
+    )
+
+with summary_col8:
+    st.metric("Mode", app_mode)
 
 
 # ------------------------------------------------------------
@@ -564,13 +758,36 @@ st.markdown(
 
 st.markdown("## Ranking Results")
 
-ranking_display = ranking.copy()
+st.markdown(
+    """
+    The main ranking table shows the most relevant fields for comparison.
+    Full product details, notes and sources are available in the expandable section below.
+    """
+)
+
+clean_ranking_display = build_clean_ranking_table(
+    ranking=ranking,
+    bank_col=bank_col_r,
+    product_col=product_col_r,
+    maturity_col=maturity_col_r,
+    tanb_col=tanb_col_r,
+    net_interest_col=net_interest_col,
+    final_amount_col=final_amount_col,
+    alerts_col=alerts_col,
+)
 
 st.dataframe(
-    ranking_display,
+    clean_ranking_display,
     use_container_width=True,
     hide_index=True,
 )
+
+with st.expander("Show full technical ranking table"):
+    st.dataframe(
+        ranking,
+        use_container_width=True,
+        hide_index=True,
+    )
 
 
 # ------------------------------------------------------------
@@ -593,6 +810,17 @@ if net_interest_col and product_col_r:
 
     chart_df = chart_df.sort_values(net_interest_col, ascending=True)
 
+    hover_data = []
+
+    if tanb_col_r:
+        hover_data.append(tanb_col_r)
+
+    if final_amount_col:
+        hover_data.append(final_amount_col)
+
+    if alerts_col:
+        hover_data.append(alerts_col)
+
     fig = px.bar(
         chart_df,
         x=net_interest_col,
@@ -603,6 +831,7 @@ if net_interest_col and product_col_r:
             net_interest_col: "Estimated Net Interest (€)",
             "Display Label": "Deposit Product",
         },
+        hover_data=hover_data if hover_data else None,
     )
 
     fig.update_layout(
@@ -696,10 +925,16 @@ with download_col2:
 st.divider()
 
 st.markdown(
-    """
-    <div class="small-muted">
-    MVP prototype built with Python, pandas, Streamlit and Plotly.  
-    Data should always be validated against official bank sources before any financial decision.
+    f"""
+    <div class="footer-box">
+        <div class="small-muted">
+            MVP prototype built with Python, pandas, Streamlit and Plotly.<br>
+            Dataset reference date: {metadata.get("reference_date", "Not available")} |
+            Last manual validation: {metadata.get("last_manual_validation", "Not available")}<br><br>
+            🔗 <a href="{LIVE_APP_URL}" target="_blank">Live App</a> |
+            💻 <a href="{GITHUB_URL}" target="_blank">GitHub Repository</a><br><br>
+            Data should always be validated against official bank sources before any financial decision.
+        </div>
     </div>
     """,
     unsafe_allow_html=True,
