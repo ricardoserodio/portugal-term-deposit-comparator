@@ -73,6 +73,7 @@ def compare_deposits(
     df,
     capital,
     maturity_months=None,
+    selected_bank=None,
     require_early_withdrawal=False,
     accept_new_clients_only=True,
     accept_new_money_only=True,
@@ -80,6 +81,9 @@ def compare_deposits(
 ):
     """Compare eligible deposits and rank them by estimated net interest."""
     result = df.copy()
+
+    if selected_bank and selected_bank != "All banks":
+        result = result[result["Banco"] == selected_bank]
 
     result = result[
         result["Mínimo (€)"].isna() | (capital >= result["Mínimo (€)"])
@@ -170,6 +174,7 @@ if __name__ == "__main__":
         df=df,
         capital=10000,
         maturity_months=12,
+        selected_bank="All banks",
         require_early_withdrawal=False,
         accept_new_clients_only=True,
         accept_new_money_only=True,
