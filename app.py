@@ -126,11 +126,46 @@ else:
     col3.metric("Estimated Net Interest", f'{best["Juro líquido estimado (€)"]:.2f} €')
     col4.metric("Estimated Final Amount", f'{best["Montante final estimado (€)"]:.2f} €')
 
+    ranking_table = ranking[
+        [
+            "Banco",
+            "Produto",
+            "Prazo (meses)",
+            "TANB (%)",
+            "Juro líquido estimado (€)",
+            "Montante final estimado (€)",
+            "Alertas",
+        ]
+    ]
+
     st.dataframe(
-        ranking,
+        ranking_table,
         use_container_width=True,
         hide_index=True,
     )
+
+    st.subheader("Product Details, Notes and Sources")
+
+    for _, row in ranking.iterrows():
+        title = f'{row["Banco"]} — {row["Produto"]} | {row["TANB (%)"]:.2f}% | {int(row["Prazo (meses)"])} months'
+
+        with st.expander(title):
+            st.write(f'**Estimated net interest:** {row["Juro líquido estimado (€)"]:.2f} €')
+            st.write(f'**Estimated final amount:** {row["Montante final estimado (€)"]:.2f} €')
+            st.write(f'**Alerts:** {row["Alertas"]}')
+
+            notes = row.get("Notas / condições", "")
+            source = row.get("Fonte oficial / referência", "")
+
+            if notes:
+                st.write(f"**Notes / conditions:** {notes}")
+            else:
+                st.write("**Notes / conditions:** Not available")
+
+            if source:
+                st.write(f"**Official source / reference:** {source}")
+            else:
+                st.write("**Official source / reference:** Not available")
 
     csv = ranking.to_csv(index=False).encode("utf-8-sig")
 
