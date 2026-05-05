@@ -172,16 +172,11 @@ def detect_tax_regime_generic(text: str) -> str:
 
 
 def detect_tanb_generic(text: str) -> str:
-    """
-    Generic TANB detector.
-    Conservative because PDFs often include fiscal percentages that are not TANB.
-    """
     upper = text.upper()
 
     if "TANB" not in upper and "TAXA ANUAL NOMINAL BRUTA" not in upper:
         return "Requires visual confirmation"
 
-    # Try to capture percentages near TANB references.
     tanb_contexts = re.findall(
         r"(?:TANB|TAXA ANUAL NOMINAL BRUTA).{0,250}",
         text,
@@ -195,6 +190,7 @@ def detect_tanb_generic(text: str) -> str:
         percentages.extend(found)
 
     unique = []
+
     for value in percentages:
         clean = value.replace(" ", "")
         if clean not in unique:
@@ -223,6 +219,7 @@ def detect_document_version(text: str) -> str:
 
 def is_big_pdf(text: str) -> bool:
     upper = text.upper()
+
     return (
         "BANCO DE INVESTIMENTO GLOBAL" in upper
         or "WWW.BIG.PT" in upper
@@ -236,6 +233,9 @@ def detect_big_product(text: str, file_name: str) -> str:
     file_upper = file_name.upper()
 
     if "SUPER DEPÓSITO 3 MESES" in upper or "SUPER DEPOSITO 3 MESES" in upper:
+        return "Super Depósito 3 Meses"
+
+    if "SUPER DEPÓSITO 3 %" in upper or "SUPER DEPOSITO 3 %" in upper:
         return "Super Depósito 3 Meses"
 
     if "SUPER DEPÓSITO" in upper or "SUPER DEPOSITO" in upper:
@@ -254,7 +254,10 @@ def detect_big_maturity(text: str, file_name: str) -> str:
     if "3 MESES" in upper or "3_MESES" in file_upper:
         return "3 meses"
 
-    result = find_first_match(
+    if "PTDP2025074" in upper or "PTDP2025074" in file_upper:
+        return "3 meses"
+
+    return find_first_match(
         text,
         [
             r"PRAZO\s+(.+?)\s+TANB",
@@ -264,20 +267,32 @@ def detect_big_maturity(text: str, file_name: str) -> str:
         ],
     )
 
-    return result
-
 
 def detect_big_tanb(text: str) -> str:
     """
-    BiG PDFs often extract text in a difficult order.
-    This detector searches for percentages near TANB / taxa de remuneração.
-    It avoids fiscal rates if possible.
+    BiG PDFs may contain form fields. Prefer those when available.
     """
+    form_tanb = find_first_match(
+        text,
+        [
+            r"\[FORM FIELD\]\s*TANB:\s*([\d\.,]+)",
+            r"TANB:\s*([\d\.,]+)",
+        ],
+    )
+
+    if form_tanb != "Not detected":
+        return f"{form_tanb}%"
+
     upper = text.upper()
 
     contexts = []
 
-    for keyword in ["TANB", "TAXA ANUAL NOMINAL BRUTA", "TAXA DE REMUNERAÇÃO", "TAXA DE REMUNERACAO"]:
+    for keyword in [
+        "TANB",
+        "TAXA ANUAL NOMINAL BRUTA",
+        "TAXA DE REMUNERAÇÃO",
+        "TAXA DE REMUNERACAO",
+    ]:
         for match in re.finditer(keyword, upper):
             start = max(match.start() - 150, 0)
             end = min(match.end() + 350, len(text))
@@ -289,12 +304,21 @@ def detect_big_tanb(text: str) -> str:
         found = re.findall(r"\d+[,\.]\d+\s*%", context)
         percentages.extend(found)
 
-    # Remove obvious fiscal rates often found in Portuguese FINs.
-    fiscal_rates = {"28%", "25%", "35%", "19,6%", "17,5%", "19.6%", "17.5%"}
+    fiscal_rates = {
+        "28%",
+        "25%",
+        "35%",
+        "19,6%",
+        "17,5%",
+        "19.6%",
+        "17.5%",
+    }
 
     unique = []
+
     for value in percentages:
         clean = value.replace(" ", "")
+
         if clean not in fiscal_rates and clean not in unique:
             unique.append(clean)
 
@@ -305,7 +329,18 @@ def detect_big_tanb(text: str) -> str:
 
 
 def detect_big_minimum_amount(text: str) -> str:
-    result = find_first_match(
+    form_min = find_first_match(
+        text,
+        [
+            r"\[FORM FIELD\]\s*MONTANTEMIN:\s*([\d\.,]+)",
+            r"MONTANTEMIN:\s*([\d\.,]+)",
+        ],
+    )
+
+    if form_min != "Not detected":
+        return f"EUR {form_min}"
+
+    return find_first_match(
         text,
         [
             r"MONTANTE\s+MÍNIMO\s+(.+?)\s+MONTANTE",
@@ -317,11 +352,20 @@ def detect_big_minimum_amount(text: str) -> str:
         ],
     )
 
-    return result
-
 
 def detect_big_maximum_amount(text: str) -> str:
-    result = find_first_match(
+    form_max = find_first_match(
+        text,
+        [
+            r"\[FORM FIELD\]\s*MONTANTEMAX:\s*([\d\.,]+)",
+            r"MONTANTEMAX:\s*([\d\.,]+)",
+        ],
+    )
+
+    if form_max != "Not detected":
+        return f"EUR {form_max}"
+
+    return find_first_match(
         text,
         [
             r"MONTANTE\s+MÁXIMO\s+(.+?)\s+MOBILIZA",
@@ -333,10 +377,19 @@ def detect_big_maximum_amount(text: str) -> str:
         ],
     )
 
-    return result
-
 
 def detect_big_early_withdrawal(text: str) -> str:
+    form_mov = find_first_match(
+        text,
+        [
+            r"\[FORM FIELD\]\s*MOVIMENTACAO:\s*(.+?)(?:\[FORM FIELD\]|$)",
+            r"MOVIMENTACAO:\s*(.+?)(?:\[FORM FIELD\]|$)",
+        ],
+    )
+
+    if form_mov != "Not detected":
+        return form_mov
+
     upper = text.upper()
 
     if "NÃO MOBILIZÁVEL" in upper or "NAO MOBILIZAVEL" in upper:
@@ -376,13 +429,32 @@ def detect_big_renewal(text: str) -> str:
     )
 
 
+def detect_big_access_conditions(text: str) -> str:
+    return find_first_match(
+        text,
+        [
+            r"\[FORM FIELD\]\s*CONDACESSO:\s*(.+?)(?:\[FORM FIELD\]|$)",
+            r"CONDACESSO:\s*(.+?)(?:\[FORM FIELD\]|$)",
+        ],
+    )
+
+
+def detect_big_validity(text: str) -> str:
+    return find_first_match(
+        text,
+        [
+            r"\[FORM FIELD\]\s*VALIDADE:\s*([\d\-]+)",
+            r"VALIDADE:\s*([\d\-]+)",
+        ],
+    )
+
+
 # ------------------------------------------------------------
 # Summary logic
 # ------------------------------------------------------------
 
 def build_confidence(summary: dict) -> str:
     detected_count = 0
-    total = 7
 
     fields = [
         "bank",
@@ -397,7 +469,12 @@ def build_confidence(summary: dict) -> str:
 
     for field in fields:
         value = summary.get(field, "")
-        if value and value not in ["Not detected", "Requires visual confirmation", "Requires manual confirmation"]:
+
+        if value and value not in [
+            "Not detected",
+            "Requires visual confirmation",
+            "Requires manual confirmation",
+        ]:
             detected_count += 1
 
     if detected_count >= 6:
@@ -426,6 +503,8 @@ def summarize_pdf(pdf_path: Path) -> dict:
             "renewal": detect_big_renewal(normalized_text),
             "tax_regime": detect_tax_regime_generic(normalized_text),
             "document_version": detect_document_version(normalized_text),
+            "access_conditions": detect_big_access_conditions(normalized_text),
+            "validity": detect_big_validity(normalized_text),
             "parser_used": "Banco BiG specific parser",
             "text_preview": normalized_text[:3000],
         }
@@ -442,6 +521,8 @@ def summarize_pdf(pdf_path: Path) -> dict:
             "renewal": detect_renewal_generic(normalized_text),
             "tax_regime": detect_tax_regime_generic(normalized_text),
             "document_version": detect_document_version(normalized_text),
+            "access_conditions": "Not detected",
+            "validity": "Not detected",
             "parser_used": "Generic parser",
             "text_preview": normalized_text[:3000],
         }
@@ -490,11 +571,16 @@ def write_review(summaries: list[dict]) -> None:
             file.write(f"- **Maximum Amount / Montante máximo:** {item['maximum_amount']}\n")
             file.write(f"- **Early Withdrawal / Mobilização antecipada:** {item['early_withdrawal']}\n")
             file.write(f"- **Renewal / Renovação:** {item['renewal']}\n")
-            file.write(f"- **Tax Regime / Regime fiscal:** {item['tax_regime']}\n\n")
+            file.write(f"- **Tax Regime / Regime fiscal:** {item['tax_regime']}\n")
+            file.write(f"- **Access Conditions / Condições de acesso:** {item['access_conditions']}\n")
+            file.write(f"- **Validity / Validade:** {item['validity']}\n\n")
 
             file.write("### Human Validation\n\n")
             file.write("**Human Decision:** \n\n")
-            file.write("Use one of: `Validated`, `Update dataset`, `Keep under review`, `Source unavailable`\n\n")
+            file.write(
+                "Use one of: `Validated`, `Update dataset`, `Keep under review`, "
+                "`Source unavailable`\n\n"
+            )
 
             file.write("**Validator Notes:** \n\n")
             file.write("Example:\n\n")
