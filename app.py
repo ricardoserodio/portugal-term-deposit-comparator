@@ -126,6 +126,23 @@ else:
     col3.metric("Estimated Net Interest", f'{best["Juro líquido estimado (€)"]:.2f} €')
     col4.metric("Estimated Final Amount", f'{best["Montante final estimado (€)"]:.2f} €')
 
+    st.subheader("Best Deposit Simulation")
+
+    sim_col1, sim_col2, sim_col3 = st.columns(3)
+
+    sim_col1.write(f'**Bank:** {best["Banco"]}')
+    sim_col1.write(f'**Product:** {best["Produto"]}')
+    sim_col1.write(f"**Capital invested:** {capital:,.2f} €")
+
+    sim_col2.write(f'**Maturity:** {int(best["Prazo (meses)"])} months')
+    sim_col2.write(f'**TANB:** {best["TANB (%)"]:.2f}%')
+    sim_col2.write(f'**Alerts:** {best["Alertas"]}')
+
+    sim_col3.write(f'**Gross interest:** {best["Juro bruto estimado (€)"]:.2f} €')
+    sim_col3.write(f'**Estimated tax:** {best["IRS estimado (€)"]:.2f} €')
+    sim_col3.write(f'**Net interest:** {best["Juro líquido estimado (€)"]:.2f} €')
+    sim_col3.write(f'**Final amount:** {best["Montante final estimado (€)"]:.2f} €')
+
     ranking_table = ranking[
         [
             "Banco",
@@ -150,6 +167,8 @@ else:
         title = f'{row["Banco"]} — {row["Produto"]} | {row["TANB (%)"]:.2f}% | {int(row["Prazo (meses)"])} months'
 
         with st.expander(title):
+            st.write(f'**Gross interest:** {row["Juro bruto estimado (€)"]:.2f} €')
+            st.write(f'**Estimated tax:** {row["IRS estimado (€)"]:.2f} €')
             st.write(f'**Estimated net interest:** {row["Juro líquido estimado (€)"]:.2f} €')
             st.write(f'**Estimated final amount:** {row["Montante final estimado (€)"]:.2f} €')
             st.write(f'**Alerts:** {row["Alertas"]}')
