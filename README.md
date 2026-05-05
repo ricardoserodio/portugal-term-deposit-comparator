@@ -49,6 +49,8 @@ The project intentionally excludes broad EU digital-only banks without a clear f
 - Final amount estimation
 - Automatic condition alerts
 - Interactive Google Colab prototype
+- Reusable Python calculation module
+- Basic usage example script
 
 ---
 
@@ -56,7 +58,7 @@ The project intentionally excludes broad EU digital-only banks without a clear f
 
 The main dataset used in this project is:
 
-`depositos_prazo_core_portugal_corrigido.csv`
+`data/depositos_prazo_core_portugal_corrigido.csv`
 
 The dataset includes fields such as:
 
@@ -150,21 +152,11 @@ Current structure:
 ```text
 portugal-term-deposit-comparator/
 │
-├── README.md
-├── LICENSE
-├── depositos_prazo_core_portugal_corrigido.csv
-│
-└── notebooks/
-    └── portugal-term-deposit-comparator.ipynb
-```
-
-Planned structure:
-
-```text
-portugal-term-deposit-comparator/
-│
 ├── data/
 │   └── depositos_prazo_core_portugal_corrigido.csv
+│
+├── examples/
+│   └── basic_usage.py
 │
 ├── notebooks/
 │   └── portugal-term-deposit-comparator.ipynb
@@ -187,6 +179,75 @@ portugal-term-deposit-comparator/
 - Google Colab
 - ipywidgets
 - GitHub
+
+---
+
+## How to Run
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/ricardoserodio/portugal-term-deposit-comparator.git
+cd portugal-term-deposit-comparator
+```
+
+### 2. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Run the basic example
+
+```bash
+python examples/basic_usage.py
+```
+
+This will load the cleaned dataset from the `data/` folder and generate a ranking of eligible term deposits for a sample investment scenario.
+
+---
+
+## Python Module
+
+The main calculation logic is available in:
+
+```text
+src/calculator.py
+```
+
+The module includes functions to:
+
+- Load the dataset
+- Prepare numeric and text fields
+- Filter deposits by eligibility criteria
+- Calculate gross interest
+- Estimate withholding tax
+- Calculate net interest
+- Generate product alerts
+- Rank deposits by estimated net return
+
+---
+
+## Example Code
+
+```python
+from src.calculator import load_data, prepare_data, compare_deposits
+
+df = load_data()
+df = prepare_data(df)
+
+ranking = compare_deposits(
+    df=df,
+    capital=10000,
+    maturity_months=12,
+    require_early_withdrawal=False,
+    accept_new_clients_only=True,
+    accept_new_money_only=True,
+    top_n=10,
+)
+
+print(ranking)
+```
 
 ---
 
@@ -237,8 +298,6 @@ Before making any financial decision, users should always confirm the latest pro
 
 Planned improvements include:
 
-- Move the dataset into a dedicated `data/` folder
-- Add a standalone Python script in `src/`
 - Add a Streamlit dashboard
 - Add export to CSV/Excel
 - Add account cost impact on net return
@@ -247,6 +306,9 @@ Planned improvements include:
 - Add manual validation workflow
 - Add automated change detection from official sources
 - Add comparison between term deposits and savings certificates
+- Add historical tracking of rate changes
+- Add product-level confidence score
+- Add deposit guarantee scheme information
 
 ---
 
@@ -254,7 +316,7 @@ Planned improvements include:
 
 `MVP completed`
 
-The current version includes a cleaned dataset, financial calculation logic and an interactive Colab prototype.
+The current version includes a cleaned dataset, financial calculation logic, a reusable Python module, a basic usage example and an interactive Colab prototype.
 
 ---
 
