@@ -153,6 +153,8 @@ def compare_deposits(
         "Juro líquido estimado (€)",
         "Montante final estimado (€)",
         "Alertas",
+        "Notas / condições",
+        "Fonte oficial / referência",
     ]
 
     return result[columns].head(top_n)
