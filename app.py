@@ -1,9 +1,30 @@
 from io import BytesIO
+import json
+from pathlib import Path
 
 import plotly.express as px
 import streamlit as st
 
 from src.calculator import load_data, prepare_data, compare_deposits
+
+
+METADATA_PATH = Path("data/metadata.json")
+
+
+def load_metadata(path=METADATA_PATH):
+    """Load dataset metadata used for app status and disclaimer."""
+    if path.exists():
+        with open(path, "r", encoding="utf-8") as file:
+            return json.load(file)
+
+    return {
+        "reference_date": "Not available",
+        "last_manual_validation": "Not available",
+        "validation_status": "Not available",
+        "market_scope": "Not available",
+        "real_time_warning": "Dataset metadata is not available.",
+        "disclaimer": "This tool is for educational and informational purposes only. It does not constitute financial advice.",
+    }
 
 
 st.set_page_config(
@@ -61,6 +82,8 @@ st.markdown(
 )
 
 
+metadata = load_metadata()
+
 st.markdown(
     """
     <div class="main-title">🏦 Portugal Term Deposit Comparator</div>
@@ -72,23 +95,19 @@ st.markdown(
 )
 
 st.info(
-    """
-    **Data reference date:** 05 May 2026  
-    **Dataset status:** Manually curated and partially validated against official sources.  
-    **Market scope:** Portuguese banks, banks with physical/established presence in Portugal, and selected online banks relevant to Portuguese residents.  
+    f"""
+    **Data reference date:** {metadata.get("reference_date", "Not available")}  
+    **Last manual validation:** {metadata.get("last_manual_validation", "Not available")}  
+    **Dataset status:** {metadata.get("validation_status", "Not available")}  
+    **Market scope:** {metadata.get("market_scope", "Not available")}  
 
-    This dataset may not reflect real-time changes in deposit rates, conditions or eligibility criteria.
+    {metadata.get("real_time_warning", "")}
     """
 )
 
 st.warning(
-    """
-    **Disclaimer:** This tool is for educational and informational purposes only.  
-
-    It does not constitute financial advice, investment advice, tax advice or a recommendation to subscribe to any financial product.  
-
-    Deposit rates, conditions, eligibility criteria, tax treatment and account costs may change at any time.  
-    Always confirm the latest information directly with the official bank documentation before making any financial decision.
+    f"""
+    **Disclaimer:** {metadata.get("disclaimer", "This tool is for educational and informational purposes only.")}
     """
 )
 
