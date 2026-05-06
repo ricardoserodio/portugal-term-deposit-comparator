@@ -30,8 +30,36 @@ def normalize_value(value):
     return str(value).strip()
 
 
+def parse_number(value):
+    if value is None or pd.isna(value):
+        return None
+
+    text = str(value).strip()
+    text = text.replace("€", "").replace("%", "").replace(" ", "")
+
+    if text == "":
+        return None
+
+    # Portuguese format: 2.000,50
+    if "," in text and "." in text:
+        text = text.replace(".", "").replace(",", ".")
+    # Portuguese decimal: 2,5
+    elif "," in text:
+        text = text.replace(",", ".")
+    # Dot can be decimal or thousands separator
+    elif "." in text:
+        parts = text.split(".")
+        if len(parts[-1]) == 3 and len(parts) > 1:
+            text = text.replace(".", "")
+
+    try:
+        return float(text)
+    except Exception:
+        return None
+
+
 def extract_url_from_text(text):
-    urls = re.findall(r"https?://[^\s,;]+", str(text))
+    urls = re.findall(r"https?://[^\s,;|]+", str(text))
     return urls[0] if urls else None
 
 
@@ -68,8 +96,6 @@ def fetch_source_text(url):
 
 
 def choose_source(source_links_df, bank, product):
-    search_text = f"{bank} {product}".lower()
-
     candidates = source_links_df[
         source_links_df.astype(str).apply(
             lambda row: str(bank).lower() in " ".join(row.values).lower(),
@@ -84,7 +110,7 @@ def choose_source(source_links_df, bank, product):
     print("\nPossible official sources:")
     for i, row in candidates.iterrows():
         row_text = " | ".join(str(x) for x in row.values)
-        print(f"{i + 1}. {row_text[:300]}")
+        print(f"{i + 1}. {row_text[:350]}")
 
     choice = input("\nChoose source number, or press Enter to paste manually: ").strip()
 
@@ -101,7 +127,7 @@ def choose_source(source_links_df, bank, product):
     return url
 
 
-def ai_extract_data(source_text, bank, product):
+def ai_extract_data(source_text, bank, product, selected_maturity_months):
     source_text = source_text[:30000]
 
     schema = {
@@ -157,11 +183,13 @@ Do not guess. If a field is unclear, return null.
 
 Target bank: {bank}
 Target product: {product}
+Target maturity from selected dataset row: {selected_maturity_months} months
 
 Important:
 - TANB means gross annual nominal rate.
 - Amounts must be returned as numbers in EUR.
-- If several maturities exist, focus on the product/maturity shown in the selected dataset row if identifiable.
+- If several maturities exist, focus on the target maturity from the selected dataset row.
+- If the official source confirms that the same TANB applies to multiple maturities including the target maturity, return the target maturity.
 - Evidence summary must explain what was found and what remains uncertain.
 
 Official source text:
@@ -187,24 +215,13 @@ Official source text:
 
 
 def compare_numeric(dataset_value, official_value):
-    if official_value is None:
+    dataset_number = parse_number(dataset_value)
+    official_number = parse_number(official_value)
+
+    if dataset_number is None or official_number is None:
         return "Unknown"
 
-    dataset_value = normalize_value(dataset_value)
-
-    try:
-        d = float(
-            str(dataset_value)
-            .replace("%", "")
-            .replace("€", "")
-            .replace(".", "")
-            .replace(",", ".")
-            .strip()
-        )
-        o = float(official_value)
-        return "Yes" if abs(d - o) < 0.01 else "No"
-    except Exception:
-        return "Unknown"
+    return "Yes" if abs(dataset_number - official_number) < 0.01 else "No"
 
 
 def compare_boolean(dataset_value, official_value):
@@ -273,23 +290,51 @@ def main():
 
     source_text = fetch_source_text(source_url)
 
+    dataset_maturity = get_column(
+        selected_row,
+        ["Prazo (meses)", "maturity_months", "prazo_meses"]
+    )
+
+    dataset_tanb = get_column(
+        selected_row,
+        ["TANB (%)", "tanb", "TANB", "taxa_tanb", "tanb_percent"]
+    )
+
+    dataset_min = get_column(
+        selected_row,
+        ["Mínimo (€)", "min_amount", "Montante mínimo", "montante_minimo", "min_amount_eur"]
+    )
+
+    dataset_max = get_column(
+        selected_row,
+        ["Máximo (€)", "max_amount", "Montante máximo", "montante_maximo", "max_amount_eur"]
+    )
+
+    dataset_early = get_column(
+        selected_row,
+        ["Mobilização antecipada", "early_withdrawal", "mobilizacao_antecipada"]
+    )
+
     print("\nSending source text to AI...\n")
-    extracted = ai_extract_data(source_text, bank, product)
+
+    extracted = ai_extract_data(
+        source_text,
+        bank,
+        product,
+        dataset_maturity
+    )
 
     print("\nAI extraction:")
     print(json.dumps(extracted, indent=2, ensure_ascii=False))
-
-    dataset_tanb = get_column(selected_row, ["tanb", "TANB", "TANB (%)", "taxa_tanb", "tanb_percent"])
-    dataset_min = get_column(selected_row, ["min_amount", "Montante mínimo", "montante_minimo", "min_amount_eur"])
-    dataset_max = get_column(selected_row, ["max_amount", "Montante máximo", "montante_maximo", "max_amount_eur"])
-    dataset_early = get_column(selected_row, ["early_withdrawal", "Mobilização antecipada", "mobilizacao_antecipada"])
 
     tanb_match = compare_numeric(dataset_tanb, extracted["tanb_percent"])
     min_match = compare_numeric(dataset_min, extracted["min_amount_eur"])
     max_match = compare_numeric(dataset_max, extracted["max_amount_eur"])
     early_match = compare_boolean(dataset_early, extracted["early_withdrawal_allowed"])
+    maturity_match = compare_numeric(dataset_maturity, extracted["maturity_months"])
 
     print("\nComparison:")
+    print(f"Maturity: dataset={dataset_maturity} | official={extracted['maturity_months']} | match={maturity_match}")
     print(f"TANB: dataset={dataset_tanb} | official={extracted['tanb_percent']} | match={tanb_match}")
     print(f"Min amount: dataset={dataset_min} | official={extracted['min_amount_eur']} | match={min_match}")
     print(f"Max amount: dataset={dataset_max} | official={extracted['max_amount_eur']} | match={max_match}")
@@ -309,7 +354,16 @@ def main():
         print("\nNot approved. Nothing was written.")
         return
 
-    validation_status = "Validated_FIN" if source_type == "Official PDF" and extracted["source_confidence"] == "high" else "Partially_Validated"
+    validation_status = (
+        "Validated_FIN"
+        if source_type == "Official PDF"
+        and extracted["source_confidence"] == "high"
+        and tanb_match == "Yes"
+        and min_match == "Yes"
+        and max_match == "Yes"
+        and early_match == "Yes"
+        else "Partially_Validated"
+    )
 
     log_row = [
         date.today().isoformat(),
@@ -337,6 +391,7 @@ def main():
     append_to_log(log_row)
 
     print(f"\nValidation written to {VALIDATION_LOG_PATH}")
+    print(f"Validation status: {validation_status}")
 
 
 if __name__ == "__main__":

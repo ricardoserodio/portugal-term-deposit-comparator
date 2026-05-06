@@ -1,2 +1,0 @@
-validation_date,bank,product,maturity_months,dataset_tanb,official_tanb,tanb_match,dataset_min_amount,official_min_amount,min_amount_match,dataset_max_amount,official_max_amount,max_amount_match,dataset_early_withdrawal,official_early_withdrawal,early_withdrawal_match,source_type,source_url,validation_status,notes
-2026-05-06,,,,,,,,,,,,,,,,,,Pending_Review,
