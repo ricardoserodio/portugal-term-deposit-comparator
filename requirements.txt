@@ -7,3 +7,5 @@ plotly
 requests
 beautifulsoup4
 pypdf
+openai
+python-dotenv
