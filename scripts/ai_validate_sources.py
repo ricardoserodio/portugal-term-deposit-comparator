@@ -4,6 +4,8 @@ import json
 import re
 from datetime import date
 from io import BytesIO
+from pathlib import Path
+import sys
 from urllib.parse import urlparse
 
 import pandas as pd
@@ -12,6 +14,10 @@ from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from openai import OpenAI
 from pypdf import PdfReader
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from src.data_io import read_source_links
 
 
 DATASET_PATH = "data/depositos_prazo_core_portugal_corrigido.csv"
@@ -258,7 +264,7 @@ def main():
         raise RuntimeError("OPENAI_API_KEY not found. Create a local .env file first.")
 
     dataset = pd.read_csv(DATASET_PATH)
-    source_links = pd.read_csv(SOURCE_LINKS_PATH)
+    source_links = read_source_links(SOURCE_LINKS_PATH)
 
     banks = sorted(dataset.iloc[:, 0].dropna().unique())
 

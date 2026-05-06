@@ -4,10 +4,15 @@ import json
 import re
 from datetime import datetime
 from pathlib import Path
+import sys
 
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from src.data_io import read_source_links
 
 
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -151,7 +156,7 @@ def generate_validation_report(accept_snapshots: bool = False) -> Path:
     VALIDATION_DIR.mkdir(parents=True, exist_ok=True)
     SNAPSHOTS_DIR.mkdir(parents=True, exist_ok=True)
 
-    sources = pd.read_csv(SOURCE_LINKS_PATH, sep="|")
+    sources = read_source_links(SOURCE_LINKS_PATH)
     snapshots = load_snapshots()
 
     active_sources = sources[

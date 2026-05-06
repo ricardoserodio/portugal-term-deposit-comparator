@@ -2,8 +2,14 @@ import argparse
 import csv
 import time
 from datetime import date
+from pathlib import Path
+import sys
 
 import pandas as pd
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from src.data_io import read_source_links
 
 from ai_validate_sources import (
     DATASET_PATH,
@@ -531,7 +537,7 @@ def main():
     args = parser.parse_args()
 
     dataset = pd.read_csv(DATASET_PATH)
-    source_links = pd.read_csv(SOURCE_LINKS_PATH)
+    source_links = read_source_links(SOURCE_LINKS_PATH)
 
     if args.bank:
         dataset = dataset[

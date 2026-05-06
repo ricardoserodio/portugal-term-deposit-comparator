@@ -1,10 +1,16 @@
 import argparse
 import os
+from pathlib import Path
+import sys
+
 import pandas as pd
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from src.data_io import read_source_links
 
 from ai_propose_all_validations import (
     DATASET_PATH,
-    SOURCE_LINKS_PATH,
     process_row,
 )
 
@@ -50,7 +56,7 @@ def main():
     args = parser.parse_args()
 
     dataset = pd.read_csv(DATASET_PATH)
-    source_links = pd.read_csv(SOURCE_LINKS_PATH, sep="|", encoding="utf-8-sig", dtype=str)
+    source_links = read_source_links()
 
     dataset = dataset[
         dataset.iloc[:, 0].astype(str).str.contains(args.bank, case=False, na=False)
