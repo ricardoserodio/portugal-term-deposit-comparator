@@ -1,5 +1,12 @@
 import re
+from pathlib import Path
+import sys
+
 import pandas as pd
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from src.data_io import read_source_links
 
 
 DATASET_PATH = "data/depositos_prazo_core_portugal_corrigido.csv"
@@ -138,7 +145,7 @@ def source_match_level(dataset_bank, dataset_product, sources):
 
 def main():
     dataset, dataset_sep = read_csv_flexible(DATASET_PATH)
-    sources, sources_sep = read_csv_flexible(SOURCE_LINKS_PATH)
+    sources = read_source_links(SOURCE_LINKS_PATH)
 
     bank_col = get_first_col(dataset, ["Banco", "bank"], fallback_index=0)
     product_col = get_first_col(dataset, ["Produto", "product"], fallback_index=1)

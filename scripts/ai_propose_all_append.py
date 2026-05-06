@@ -1,10 +1,16 @@
 import os
 import time
+from pathlib import Path
+import sys
+
 import pandas as pd
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from src.data_io import read_source_links
 
 from ai_propose_all_validations import (
     DATASET_PATH,
-    SOURCE_LINKS_PATH,
     process_row,
 )
 
@@ -33,7 +39,7 @@ def make_key(row):
 
 def main():
     dataset = pd.read_csv(DATASET_PATH)
-    source_links = pd.read_csv(SOURCE_LINKS_PATH, sep="|", encoding="utf-8-sig", dtype=str)
+    source_links = read_source_links()
 
     print(f"Rows to process: {len(dataset)}")
     print(f"Output master file: {OUTPUT_PATH}")
