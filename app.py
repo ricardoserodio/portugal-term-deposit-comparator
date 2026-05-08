@@ -626,34 +626,160 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    html, body, [class*="css"] {
-        background-color: #020617;
-        color: #F9FAFB;
-    }
-
+    /* Global dark theme */
     .stApp {
-        background-color: #020617;
-        color: #F9FAFB;
+        background-color: #020617 !important;
+        color: #F9FAFB !important;
     }
 
+    [data-testid="stAppViewContainer"] {
+        background-color: #020617 !important;
+        color: #F9FAFB !important;
+    }
+
+    [data-testid="stMain"] {
+        background-color: #020617 !important;
+        color: #F9FAFB !important;
+    }
+
+    [data-testid="stMainBlockContainer"] {
+        background-color: #020617 !important;
+        color: #F9FAFB !important;
+    }
+
+    /* Header / top bar */
+    [data-testid="stHeader"] {
+        background-color: #020617 !important;
+        color: #F9FAFB !important;
+    }
+
+    header {
+        background-color: #020617 !important;
+    }
+
+    /* Sidebar */
+    [data-testid="stSidebar"] {
+        background-color: #0F172A !important;
+        color: #F9FAFB !important;
+    }
+
+    [data-testid="stSidebarContent"] {
+        background-color: #0F172A !important;
+        color: #F9FAFB !important;
+    }
+
+    [data-testid="stSidebar"] * {
+        color: #F9FAFB !important;
+    }
+
+    /* Sidebar input containers */
+    [data-testid="stSidebar"] input,
+    [data-testid="stSidebar"] textarea,
+    [data-testid="stSidebar"] select {
+        background-color: #111827 !important;
+        color: #F9FAFB !important;
+        border: 1px solid #334155 !important;
+        border-radius: 8px !important;
+    }
+
+    [data-testid="stSidebar"] label {
+        color: #F9FAFB !important;
+        font-weight: 600 !important;
+    }
+
+    /* Selectbox / number input / radio / slider labels */
+    [data-testid="stSelectbox"] label,
+    [data-testid="stNumberInput"] label,
+    [data-testid="stSlider"] label,
+    [data-testid="stRadio"] label {
+        color: #F9FAFB !important;
+    }
+
+    /* Radio buttons */
+    [role="radiogroup"] label {
+        color: #F9FAFB !important;
+    }
+
+    /* General headings and text */
+    h1, h2, h3, h4, h5, h6 {
+        color: #F9FAFB !important;
+    }
+
+    p, span, label {
+        color: inherit;
+    }
+
+    /* Metrics */
+    [data-testid="stMetric"] {
+        background-color: transparent !important;
+        color: #F9FAFB !important;
+    }
+
+    [data-testid="stMetric"] label {
+        color: #CBD5E1 !important;
+        font-weight: 600 !important;
+    }
+
+    [data-testid="stMetric"] div {
+        color: #F9FAFB !important;
+    }
+
+    [data-testid="stMetricValue"] {
+        color: #F9FAFB !important;
+    }
+
+    [data-testid="stMetricLabel"] {
+        color: #CBD5E1 !important;
+    }
+
+    /* Tabs */
+    [data-testid="stTabs"] button {
+        color: #CBD5E1 !important;
+    }
+
+    [data-testid="stTabs"] button[aria-selected="true"] {
+        color: #F87171 !important;
+        font-weight: 700 !important;
+    }
+
+    /* Native Streamlit alerts */
+    [data-testid="stAlert"] {
+        border-radius: 12px !important;
+        border: 1px solid #334155 !important;
+        background-color: #111827 !important;
+        color: #F9FAFB !important;
+    }
+
+    [data-testid="stAlert"] * {
+        color: #F9FAFB !important;
+    }
+
+    /* Dataframes */
+    [data-testid="stDataFrame"] {
+        background-color: #0F172A !important;
+        color: #F9FAFB !important;
+    }
+
+    /* Custom title */
     .main-title {
         font-size: 42px;
         font-weight: 800;
         margin-bottom: 0px;
-        color: #F9FAFB;
+        color: #F9FAFB !important;
     }
 
     .subtitle {
         font-size: 17px;
-        color: #CBD5E1;
+        color: #CBD5E1 !important;
         margin-bottom: 25px;
     }
 
     .small-muted {
         font-size: 13px;
-        color: #CBD5E1;
+        color: #CBD5E1 !important;
     }
 
+    /* Custom cards */
     .simulation-card {
         background-color: #111827;
         border: 1px solid #374151;
@@ -698,20 +824,20 @@ st.markdown(
     .freshness-card .card-line,
     .warning-card .card-title,
     .warning-card .card-line {
-        color: #FFFFFF;
+        color: #FFFFFF !important;
     }
 
     .card-title {
         font-size: 22px;
         font-weight: 700;
         margin-bottom: 10px;
-        color: #F9FAFB;
+        color: #F9FAFB !important;
     }
 
     .card-line {
         font-size: 15px;
         margin-bottom: 6px;
-        color: #F9FAFB;
+        color: #F9FAFB !important;
     }
 
     .highlight-card {
@@ -727,19 +853,19 @@ st.markdown(
     .highlight-icon {
         font-size: 26px;
         margin-bottom: 8px;
-        color: #F9FAFB;
+        color: #F9FAFB !important;
     }
 
     .highlight-title {
         font-size: 17px;
         font-weight: 700;
         margin-bottom: 8px;
-        color: #F9FAFB;
+        color: #F9FAFB !important;
     }
 
     .highlight-text {
         font-size: 14px;
-        color: #E5E7EB;
+        color: #E5E7EB !important;
         line-height: 1.45;
     }
 
@@ -753,12 +879,12 @@ st.markdown(
     }
 
     .footer-box .small-muted {
-        color: #CBD5E1;
+        color: #CBD5E1 !important;
     }
 
     a {
         text-decoration: none;
-        color: #60A5FA;
+        color: #60A5FA !important;
     }
 
     a:hover {
@@ -1696,30 +1822,4 @@ with details_tab:
 
         st.download_button(
             label=translate(lang, "download_excel"),
-            data=excel_data,
-            file_name="term_deposit_ranking.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        )
-
-
-# ------------------------------------------------------------
-# Footer
-# ------------------------------------------------------------
-
-st.divider()
-
-st.markdown(
-    f"""
-    <div class="footer-box">
-        <div class="small-muted">
-            {translate(lang, "footer_built")}<br>
-            {translate(lang, "dataset_reference_date")}: {metadata.get("reference_date", "Not available")} |
-            {translate(lang, "last_manual_validation")}: {metadata.get("last_manual_validation", "Not available")}<br><br>
-            🔗 <a href="{LIVE_APP_URL}" target="_blank">{translate(lang, "live_app")}</a> |
-            💻 <a href="{GITHUB_URL}" target="_blank">{translate(lang, "github_repo")}</a><br><br>
-            {translate(lang, "footer_warning")}
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+            da
