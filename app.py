@@ -316,7 +316,7 @@ TEXT = {
 
 
 # ------------------------------------------------------------
-# Translation helpers
+# Helpers
 # ------------------------------------------------------------
 
 def get_language_code(language_label: str) -> str:
@@ -326,10 +326,6 @@ def get_language_code(language_label: str) -> str:
 def translate(lang: str, key: str) -> str:
     return TEXT.get(lang, TEXT["en"]).get(key, key)
 
-
-# ------------------------------------------------------------
-# Metadata loader
-# ------------------------------------------------------------
 
 def load_metadata(path: Path = METADATA_PATH) -> dict:
     if path.exists():
@@ -350,10 +346,6 @@ def load_metadata(path: Path = METADATA_PATH) -> dict:
     }
 
 
-# ------------------------------------------------------------
-# Helper functions
-# ------------------------------------------------------------
-
 def find_column(df: pd.DataFrame, candidates: list[str]) -> str | None:
     for col in candidates:
         if col in df.columns:
@@ -373,7 +365,7 @@ def has_value(value) -> bool:
 
     text = str(value).strip().lower()
 
-    empty_values = [
+    return text not in [
         "",
         "n/a",
         "na",
@@ -384,8 +376,6 @@ def has_value(value) -> bool:
         "nao disponivel",
     ]
 
-    return text not in empty_values
-
 
 def is_affirmative(value) -> bool:
     if pd.isna(value):
@@ -393,22 +383,23 @@ def is_affirmative(value) -> bool:
 
     text = str(value).strip().lower()
 
-    affirmative_values = [
-        "yes",
-        "y",
-        "sim",
-        "true",
-        "1",
-        "required",
-        "obrigatório",
-        "obrigatorio",
-        "exclusive",
-        "exclusivo",
-        "only",
-        "apenas",
-    ]
-
-    return any(token in text for token in affirmative_values)
+    return any(
+        token in text
+        for token in [
+            "yes",
+            "y",
+            "sim",
+            "true",
+            "1",
+            "required",
+            "obrigatório",
+            "obrigatorio",
+            "exclusive",
+            "exclusivo",
+            "only",
+            "apenas",
+        ]
+    )
 
 
 def is_negative(value) -> bool:
@@ -417,20 +408,21 @@ def is_negative(value) -> bool:
 
     text = str(value).strip().lower()
 
-    negative_values = [
-        "no",
-        "não",
-        "nao",
-        "false",
-        "0",
-        "not",
-        "sem",
-        "not required",
-        "não obrigatório",
-        "nao obrigatorio",
-    ]
-
-    return any(token in text for token in negative_values)
+    return any(
+        token in text
+        for token in [
+            "no",
+            "não",
+            "nao",
+            "false",
+            "0",
+            "not",
+            "sem",
+            "not required",
+            "não obrigatório",
+            "nao obrigatorio",
+        ]
+    )
 
 
 def to_excel_bytes(df: pd.DataFrame) -> bytes:
@@ -458,8 +450,10 @@ def format_percentage(value) -> str:
 
 def truncate_text(value, max_length: int = 60) -> str:
     text = str(value)
+
     if len(text) <= max_length:
         return text
+
     return text[: max_length - 3] + "..."
 
 
@@ -469,7 +463,7 @@ def is_clean_alert(value) -> bool:
 
     text = str(value).strip().lower()
 
-    clean_values = [
+    return text in [
         "",
         "no alerts",
         "sem alertas",
@@ -477,8 +471,6 @@ def is_clean_alert(value) -> bool:
         "n/a",
         "nan",
     ]
-
-    return text in clean_values
 
 
 def infer_validation_status(
@@ -537,12 +529,7 @@ def build_clean_ranking_table(
         display_df[translate(lang, "estimated_final_amount")] = ranking[final_amount_col].apply(format_currency)
 
     display_df[translate(lang, "validation_status_column")] = ranking.apply(
-        lambda row: infer_validation_status(
-            row=row,
-            lang=lang,
-            source_col=source_col,
-            alerts_col=alerts_col,
-        ),
+        lambda row: infer_validation_status(row, lang, source_col, alerts_col),
         axis=1,
     )
 
@@ -626,43 +613,17 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    /* Global dark theme */
-    .stApp {
-        background-color: #020617 !important;
-        color: #F9FAFB !important;
-    }
-
-    [data-testid="stAppViewContainer"] {
-        background-color: #020617 !important;
-        color: #F9FAFB !important;
-    }
-
-    [data-testid="stMain"] {
-        background-color: #020617 !important;
-        color: #F9FAFB !important;
-    }
-
-    [data-testid="stMainBlockContainer"] {
-        background-color: #020617 !important;
-        color: #F9FAFB !important;
-    }
-
-    /* Header / top bar */
-    [data-testid="stHeader"] {
-        background-color: #020617 !important;
-        color: #F9FAFB !important;
-    }
-
+    .stApp,
+    [data-testid="stAppViewContainer"],
+    [data-testid="stMain"],
+    [data-testid="stMainBlockContainer"],
+    [data-testid="stHeader"],
     header {
         background-color: #020617 !important;
-    }
-
-    /* Sidebar */
-    [data-testid="stSidebar"] {
-        background-color: #0F172A !important;
         color: #F9FAFB !important;
     }
 
+    [data-testid="stSidebar"],
     [data-testid="stSidebarContent"] {
         background-color: #0F172A !important;
         color: #F9FAFB !important;
@@ -672,35 +633,92 @@ st.markdown(
         color: #F9FAFB !important;
     }
 
-    /* Sidebar input containers */
     [data-testid="stSidebar"] input,
     [data-testid="stSidebar"] textarea,
-    [data-testid="stSidebar"] select {
+    [data-testid="stSidebar"] select,
+    div[data-baseweb="select"] > div,
+    div[data-baseweb="input"],
+    div[data-baseweb="input"] input,
+    input {
         background-color: #111827 !important;
         color: #F9FAFB !important;
-        border: 1px solid #334155 !important;
+        border: 1px solid #CBD5E1 !important;
         border-radius: 8px !important;
     }
 
+    input::placeholder {
+        color: #94A3B8 !important;
+    }
+
+    div[data-baseweb="select"] span {
+        color: #F9FAFB !important;
+    }
+
+    div[data-baseweb="popover"],
+    div[data-baseweb="popover"] div,
+    div[data-baseweb="menu"],
+    div[data-baseweb="menu"] li {
+        background-color: #111827 !important;
+        color: #F9FAFB !important;
+    }
+
+    div[data-baseweb="menu"] {
+        border: 1px solid #334155 !important;
+    }
+
+    div[data-baseweb="menu"] li:hover {
+        background-color: #1E293B !important;
+        color: #FFFFFF !important;
+    }
+
+    [data-testid="stSelectbox"] label,
+    [data-testid="stNumberInput"] label,
+    [data-testid="stSlider"] label,
+    [data-testid="stRadio"] label,
+    [role="radiogroup"] label,
     [data-testid="stSidebar"] label {
         color: #F9FAFB !important;
         font-weight: 600 !important;
     }
 
-    /* Selectbox / number input / radio / slider labels */
-    [data-testid="stSelectbox"] label,
-    [data-testid="stNumberInput"] label,
-    [data-testid="stSlider"] label,
-    [data-testid="stRadio"] label {
+    /* Number input + and - buttons */
+    [data-testid="stNumberInput"] button {
+        background-color: #1E293B !important;
+        color: #FFFFFF !important;
+        border: 1px solid #334155 !important;
+        border-radius: 6px !important;
+    }
+
+    [data-testid="stNumberInput"] button:hover {
+        background-color: #334155 !important;
+        color: #FFFFFF !important;
+        border: 1px solid #475569 !important;
+    }
+
+    [data-testid="stNumberInput"] button:focus {
+        background-color: #334155 !important;
+        color: #FFFFFF !important;
+        border: 1px solid #64748B !important;
+        box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.25) !important;
+    }
+
+    [data-testid="stNumberInput"] button svg,
+    [data-testid="stNumberInput"] button * {
+        color: #FFFFFF !important;
+        fill: #FFFFFF !important;
+        stroke: #FFFFFF !important;
+    }
+
+    button[kind="secondary"] {
+        background-color: #1E293B !important;
+        color: #F9FAFB !important;
+        border: 1px solid #334155 !important;
+    }
+
+    [data-testid="stSlider"] div {
         color: #F9FAFB !important;
     }
 
-    /* Radio buttons */
-    [role="radiogroup"] label {
-        color: #F9FAFB !important;
-    }
-
-    /* General headings and text */
     h1, h2, h3, h4, h5, h6 {
         color: #F9FAFB !important;
     }
@@ -709,30 +727,22 @@ st.markdown(
         color: inherit;
     }
 
-    /* Metrics */
     [data-testid="stMetric"] {
         background-color: transparent !important;
         color: #F9FAFB !important;
     }
 
-    [data-testid="stMetric"] label {
+    [data-testid="stMetric"] label,
+    [data-testid="stMetricLabel"] {
         color: #CBD5E1 !important;
         font-weight: 600 !important;
     }
 
-    [data-testid="stMetric"] div {
-        color: #F9FAFB !important;
-    }
-
+    [data-testid="stMetric"] div,
     [data-testid="stMetricValue"] {
         color: #F9FAFB !important;
     }
 
-    [data-testid="stMetricLabel"] {
-        color: #CBD5E1 !important;
-    }
-
-    /* Tabs */
     [data-testid="stTabs"] button {
         color: #CBD5E1 !important;
     }
@@ -742,7 +752,6 @@ st.markdown(
         font-weight: 700 !important;
     }
 
-    /* Native Streamlit alerts */
     [data-testid="stAlert"] {
         border-radius: 12px !important;
         border: 1px solid #334155 !important;
@@ -754,13 +763,34 @@ st.markdown(
         color: #F9FAFB !important;
     }
 
-    /* Dataframes */
     [data-testid="stDataFrame"] {
         background-color: #0F172A !important;
         color: #F9FAFB !important;
     }
 
-    /* Custom title */
+    [data-testid="stDownloadButton"] button {
+        background-color: #16A34A !important;
+        color: #FFFFFF !important;
+        border: 1px solid #22C55E !important;
+        border-radius: 10px !important;
+        font-weight: 700 !important;
+        padding: 0.65rem 1rem !important;
+    }
+
+    [data-testid="stDownloadButton"] button:hover,
+    [data-testid="stDownloadButton"] button:focus {
+        background-color: #15803D !important;
+        color: #FFFFFF !important;
+        border: 1px solid #22C55E !important;
+        box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.35) !important;
+    }
+
+    [data-testid="stDownloadButton"] button p,
+    [data-testid="stDownloadButton"] button span {
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+    }
+
     .main-title {
         font-size: 42px;
         font-weight: 800;
@@ -779,7 +809,6 @@ st.markdown(
         color: #CBD5E1 !important;
     }
 
-    /* Custom cards */
     .simulation-card {
         background-color: #111827;
         border: 1px solid #374151;
@@ -800,16 +829,7 @@ st.markdown(
         color: #F9FAFB;
     }
 
-    .warning-card {
-        background-color: #422006;
-        border: 1px solid #F59E0B;
-        border-radius: 16px;
-        padding: 18px;
-        margin-top: 10px;
-        margin-bottom: 20px;
-        color: #FFFFFF;
-    }
-
+    .warning-card,
     .freshness-card {
         background-color: #422006;
         border: 1px solid #F59E0B;
@@ -1593,379 +1613,258 @@ with simulator_tab:
 
 
 # ------------------------------------------------------------
-# Custom CSS
+# Validation tab
 # ------------------------------------------------------------
 
+with validation_tab:
+    st.markdown(f"## {translate(lang, 'data_quality')}")
+
+    st.markdown(
+        f"""
+        {translate(lang, "data_quality_intro")}
+
+        {translate(lang, "data_quality_note")}
+        """
+    )
+
+    dq_col1, dq_col2, dq_col3, dq_col4 = st.columns(4)
+
+    source_count = df[source_col_df].apply(has_value).sum() if source_col_df else 0
+    alerts_count = df[alerts_col_df].apply(lambda value: not is_clean_alert(value)).sum() if alerts_col_df else 0
+
+    with dq_col1:
+        st.metric(
+            label=translate(lang, "products_reviewed"),
+            value=len(df),
+        )
+
+    with dq_col2:
+        st.metric(
+            label=translate(lang, "products_in_simulation"),
+            value=len(ranking),
+        )
+
+    with dq_col3:
+        st.metric(
+            label=translate(lang, "products_with_source"),
+            value=int(source_count),
+        )
+
+    with dq_col4:
+        st.metric(
+            label=translate(lang, "products_with_alerts"),
+            value=int(alerts_count),
+        )
+
+    dq_col5, dq_col6 = st.columns(2)
+
+    with dq_col5:
+        st.info(
+            f"""
+            **{translate(lang, "official_source_tracking")}:** {translate(lang, "enabled")}  
+            {translate(lang, "official_source_tracking_text")}
+            """
+        )
+
+    with dq_col6:
+        st.success(
+            f"""
+            **{translate(lang, "human_validation_workflow")}:** {translate(lang, "enabled")}  
+            {translate(lang, "human_validation_workflow_text")}
+            """
+        )
+
+    st.markdown(f"## {translate(lang, 'data_quality_dashboard')}")
+
+    validation_status_df = ranking[translate(lang, "validation_status_column")].value_counts().reset_index()
+    validation_status_df.columns = [translate(lang, "validation_status_column"), "Count"]
+
+    if not validation_status_df.empty:
+        fig_validation = px.bar(
+            validation_status_df,
+            x=translate(lang, "validation_status_column"),
+            y="Count",
+            title=translate(lang, "validation_status_distribution"),
+            text="Count",
+        )
+
+        fig_validation.update_traces(textposition="outside", cliponaxis=False)
+        fig_validation.update_layout(showlegend=False)
+
+        st.plotly_chart(fig_validation, use_container_width=True)
+
+    source_coverage_df = get_source_coverage_dataframe(
+        df=df,
+        bank_col=bank_col,
+        source_col=source_col_df,
+    )
+
+    if not source_coverage_df.empty:
+        st.markdown(f"### {translate(lang, 'source_coverage_by_bank')}")
+
+        st.dataframe(
+            source_coverage_df,
+            use_container_width=True,
+            hide_index=True,
+        )
+
+    st.caption(f"**{translate(lang, 'technical_note')}:** {translate(lang, 'dataset_language_note')}")
+
+    with st.expander(translate(lang, "workflow_expander")):
+        st.markdown(
+            """
+            ```text
+            Official bank sources
+                    ↓
+            Source monitoring script
+                    ↓
+            Validation report
+                    ↓
+            Human review
+                    ↓
+            Manual dataset update
+                    ↓
+            Streamlit app uses validated data only
+            ```
+
+            ```bash
+            scripts/monitor_sources.py
+            data/source_links.csv
+            validation/
+            ```
+            """
+        )
+
+
+# ------------------------------------------------------------
+# Details tab
+# ------------------------------------------------------------
+
+with details_tab:
+    st.markdown(f"## {translate(lang, 'product_details')}")
+
+    st.caption(f"**{translate(lang, 'technical_note')}:** {translate(lang, 'dataset_language_note')}")
+
+    for _, row in ranking.iterrows():
+        bank_name = get_series_value(row, bank_col_r)
+        product_name = get_series_value(row, product_col_r)
+
+        with st.expander(f"{bank_name} — {product_name}"):
+            detail_col1, detail_col2, detail_col3 = st.columns(3)
+
+            with detail_col1:
+                if tanb_col_r:
+                    st.metric("TANB", format_percentage(get_series_value(row, tanb_col_r)))
+
+                if maturity_col_r:
+                    st.write(
+                        f"**{translate(lang, 'maturity')}:** "
+                        f"{get_series_value(row, maturity_col_r)} {translate(lang, 'months')}"
+                    )
+
+            with detail_col2:
+                if gross_interest_col:
+                    st.metric(
+                        translate(lang, "estimated_gross_interest"),
+                        format_currency(get_series_value(row, gross_interest_col)),
+                    )
+
+                if tax_col:
+                    st.metric(
+                        translate(lang, "estimated_tax"),
+                        format_currency(get_series_value(row, tax_col)),
+                    )
+
+            with detail_col3:
+                if net_interest_col:
+                    st.metric(
+                        translate(lang, "estimated_net_interest"),
+                        format_currency(get_series_value(row, net_interest_col)),
+                    )
+
+                if final_amount_col:
+                    st.metric(
+                        translate(lang, "estimated_final_amount"),
+                        format_currency(get_series_value(row, final_amount_col)),
+                    )
+
+            st.write(
+                f"**{translate(lang, 'validation_status_column')}:** "
+                f"{infer_validation_status(row, lang, source_col, alerts_col)}"
+            )
+
+            product_warnings = build_eligibility_warnings(
+                row=row,
+                lang=lang,
+                new_clients_col=new_clients_col,
+                new_money_col=new_money_col,
+                early_withdrawal_col=early_withdrawal_col,
+            )
+
+            if product_warnings:
+                st.write(f"**{translate(lang, 'eligibility_warning')}:**")
+
+                for warning in product_warnings:
+                    st.write(f"- {warning}")
+
+            if alerts_col:
+                st.write(f"**{translate(lang, 'alerts')}:**")
+                st.write(get_series_value(row, alerts_col, "No alerts"))
+
+            if notes_col:
+                st.write(f"**{translate(lang, 'notes_conditions')}:**")
+                st.write(get_series_value(row, notes_col, "No notes available"))
+
+            if source_col:
+                source_value = get_series_value(row, source_col, "")
+
+                if pd.notna(source_value) and str(source_value).strip():
+                    st.write(f"**{translate(lang, 'official_source')}:**")
+                    st.write(source_value)
+
+    st.markdown(f"## {translate(lang, 'downloads')}")
+
+    download_col1, download_col2 = st.columns(2)
+
+    with download_col1:
+        csv_data = ranking.to_csv(index=False).encode("utf-8-sig")
+
+        st.download_button(
+            label=translate(lang, "download_csv"),
+            data=csv_data,
+            file_name="term_deposit_ranking.csv",
+            mime="text/csv",
+        )
+
+    with download_col2:
+        excel_data = to_excel_bytes(ranking)
+
+        st.download_button(
+            label=translate(lang, "download_excel"),
+            data=excel_data,
+            file_name="term_deposit_ranking.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+
+
+# ------------------------------------------------------------
+# Footer
+# ------------------------------------------------------------
+
+st.divider()
+
 st.markdown(
-    """
-    <style>
-    /* Global dark theme */
-    .stApp {
-        background-color: #020617 !important;
-        color: #F9FAFB !important;
-    }
-
-    [data-testid="stAppViewContainer"] {
-        background-color: #020617 !important;
-        color: #F9FAFB !important;
-    }
-
-    [data-testid="stMain"] {
-        background-color: #020617 !important;
-        color: #F9FAFB !important;
-    }
-
-    [data-testid="stMainBlockContainer"] {
-        background-color: #020617 !important;
-        color: #F9FAFB !important;
-    }
-
-    /* Header / top bar */
-    [data-testid="stHeader"] {
-        background-color: #020617 !important;
-        color: #F9FAFB !important;
-    }
-
-    header {
-        background-color: #020617 !important;
-    }
-
-    /* Sidebar */
-    [data-testid="stSidebar"] {
-        background-color: #0F172A !important;
-        color: #F9FAFB !important;
-    }
-
-    [data-testid="stSidebarContent"] {
-        background-color: #0F172A !important;
-        color: #F9FAFB !important;
-    }
-
-    [data-testid="stSidebar"] * {
-        color: #F9FAFB !important;
-    }
-
-    /* Sidebar input containers */
-    [data-testid="stSidebar"] input,
-    [data-testid="stSidebar"] textarea,
-    [data-testid="stSidebar"] select {
-        background-color: #111827 !important;
-        color: #F9FAFB !important;
-        border: 1px solid #CBD5E1 !important;
-        border-radius: 8px !important;
-    }
-
-    [data-testid="stSidebar"] label {
-        color: #F9FAFB !important;
-        font-weight: 600 !important;
-    }
-
-    /* Selectbox / number input / radio / slider labels */
-    [data-testid="stSelectbox"] label,
-    [data-testid="stNumberInput"] label,
-    [data-testid="stSlider"] label,
-    [data-testid="stRadio"] label {
-        color: #F9FAFB !important;
-    }
-
-    /* Radio buttons */
-    [role="radiogroup"] label {
-        color: #F9FAFB !important;
-    }
-
-    /* Force dark styling for Streamlit selectboxes */
-    div[data-baseweb="select"] > div {
-        background-color: #111827 !important;
-        color: #F9FAFB !important;
-        border: 1px solid #CBD5E1 !important;
-        border-radius: 8px !important;
-    }
-
-    div[data-baseweb="select"] span {
-        color: #F9FAFB !important;
-    }
-
-    div[data-baseweb="popover"] {
-        background-color: #111827 !important;
-        color: #F9FAFB !important;
-    }
-
-    div[data-baseweb="popover"] div {
-        background-color: #111827 !important;
-        color: #F9FAFB !important;
-    }
-
-    div[data-baseweb="menu"] {
-        background-color: #111827 !important;
-        color: #F9FAFB !important;
-        border: 1px solid #334155 !important;
-    }
-
-    div[data-baseweb="menu"] li {
-        background-color: #111827 !important;
-        color: #F9FAFB !important;
-    }
-
-    div[data-baseweb="menu"] li:hover {
-        background-color: #1E293B !important;
-        color: #FFFFFF !important;
-    }
-
-    /* Force dark styling for inputs */
-    div[data-baseweb="input"] {
-        background-color: #111827 !important;
-        color: #F9FAFB !important;
-        border: 1px solid #CBD5E1 !important;
-        border-radius: 8px !important;
-    }
-
-    div[data-baseweb="input"] input {
-        background-color: #111827 !important;
-        color: #F9FAFB !important;
-    }
-
-    input {
-        background-color: #111827 !important;
-        color: #F9FAFB !important;
-        border: 1px solid #CBD5E1 !important;
-    }
-
-    input::placeholder {
-        color: #94A3B8 !important;
-    }
-
-    /* Number input buttons */
-    button[kind="secondary"] {
-        background-color: #1E293B !important;
-        color: #F9FAFB !important;
-        border: 1px solid #334155 !important;
-    }
-
-    /* Slider track and value */
-    [data-testid="stSlider"] div {
-        color: #F9FAFB !important;
-    }
-
-    /* General headings and text */
-    h1, h2, h3, h4, h5, h6 {
-        color: #F9FAFB !important;
-    }
-
-    p, span, label {
-        color: inherit;
-    }
-
-    /* Metrics */
-    [data-testid="stMetric"] {
-        background-color: transparent !important;
-        color: #F9FAFB !important;
-    }
-
-    [data-testid="stMetric"] label {
-        color: #CBD5E1 !important;
-        font-weight: 600 !important;
-    }
-
-    [data-testid="stMetric"] div {
-        color: #F9FAFB !important;
-    }
-
-    [data-testid="stMetricValue"] {
-        color: #F9FAFB !important;
-    }
-
-    [data-testid="stMetricLabel"] {
-        color: #CBD5E1 !important;
-    }
-
-    /* Tabs */
-    [data-testid="stTabs"] button {
-        color: #CBD5E1 !important;
-    }
-
-    [data-testid="stTabs"] button[aria-selected="true"] {
-        color: #F87171 !important;
-        font-weight: 700 !important;
-    }
-
-    /* Native Streamlit alerts */
-    [data-testid="stAlert"] {
-        border-radius: 12px !important;
-        border: 1px solid #334155 !important;
-        background-color: #111827 !important;
-        color: #F9FAFB !important;
-    }
-
-    [data-testid="stAlert"] * {
-        color: #F9FAFB !important;
-    }
-
-    /* Dataframes */
-    [data-testid="stDataFrame"] {
-        background-color: #0F172A !important;
-        color: #F9FAFB !important;
-    }
-
-    /* Download buttons */
-    [data-testid="stDownloadButton"] button {
-        background-color: #16A34A !important;
-        color: #FFFFFF !important;
-        border: 1px solid #22C55E !important;
-        border-radius: 10px !important;
-        font-weight: 700 !important;
-        padding: 0.65rem 1rem !important;
-    }
-
-    [data-testid="stDownloadButton"] button:hover {
-        background-color: #15803D !important;
-        color: #FFFFFF !important;
-        border: 1px solid #22C55E !important;
-    }
-
-    [data-testid="stDownloadButton"] button:focus {
-        background-color: #15803D !important;
-        color: #FFFFFF !important;
-        border: 1px solid #22C55E !important;
-        box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.35) !important;
-    }
-
-    [data-testid="stDownloadButton"] button p,
-    [data-testid="stDownloadButton"] button span {
-        color: #FFFFFF !important;
-        font-weight: 700 !important;
-    }
-
-    /* Custom title */
-    .main-title {
-        font-size: 42px;
-        font-weight: 800;
-        margin-bottom: 0px;
-        color: #F9FAFB !important;
-    }
-
-    .subtitle {
-        font-size: 17px;
-        color: #CBD5E1 !important;
-        margin-bottom: 25px;
-    }
-
-    .small-muted {
-        font-size: 13px;
-        color: #CBD5E1 !important;
-    }
-
-    /* Custom cards */
-    .simulation-card {
-        background-color: #111827;
-        border: 1px solid #374151;
-        border-radius: 16px;
-        padding: 24px;
-        margin-top: 10px;
-        margin-bottom: 20px;
-        color: #F9FAFB;
-    }
-
-    .recommended-card {
-        background-color: #052E16;
-        border: 1px solid #16A34A;
-        border-radius: 16px;
-        padding: 20px;
-        margin-top: 10px;
-        margin-bottom: 20px;
-        color: #F9FAFB;
-    }
-
-    .warning-card {
-        background-color: #422006;
-        border: 1px solid #F59E0B;
-        border-radius: 16px;
-        padding: 18px;
-        margin-top: 10px;
-        margin-bottom: 20px;
-        color: #FFFFFF;
-    }
-
-    .freshness-card {
-        background-color: #422006;
-        border: 1px solid #F59E0B;
-        border-radius: 16px;
-        padding: 18px;
-        margin-top: 10px;
-        margin-bottom: 20px;
-        color: #FFFFFF;
-    }
-
-    .freshness-card .card-title,
-    .freshness-card .card-line,
-    .warning-card .card-title,
-    .warning-card .card-line {
-        color: #FFFFFF !important;
-    }
-
-    .card-title {
-        font-size: 22px;
-        font-weight: 700;
-        margin-bottom: 10px;
-        color: #F9FAFB !important;
-    }
-
-    .card-line {
-        font-size: 15px;
-        margin-bottom: 6px;
-        color: #F9FAFB !important;
-    }
-
-    .highlight-card {
-        background-color: #0F172A;
-        border: 1px solid #334155;
-        border-radius: 16px;
-        padding: 20px;
-        min-height: 155px;
-        margin-bottom: 10px;
-        color: #F9FAFB;
-    }
-
-    .highlight-icon {
-        font-size: 26px;
-        margin-bottom: 8px;
-        color: #F9FAFB !important;
-    }
-
-    .highlight-title {
-        font-size: 17px;
-        font-weight: 700;
-        margin-bottom: 8px;
-        color: #F9FAFB !important;
-    }
-
-    .highlight-text {
-        font-size: 14px;
-        color: #E5E7EB !important;
-        line-height: 1.45;
-    }
-
-    .footer-box {
-        background-color: #0F172A;
-        border: 1px solid #334155;
-        border-radius: 14px;
-        padding: 16px;
-        margin-top: 20px;
-        color: #F9FAFB;
-    }
-
-    .footer-box .small-muted {
-        color: #CBD5E1 !important;
-    }
-
-    a {
-        text-decoration: none;
-        color: #60A5FA !important;
-    }
-
-    a:hover {
-        text-decoration: underline;
-    }
-    </style>
+    f"""
+    <div class="footer-box">
+        <div class="small-muted">
+            {translate(lang, "footer_built")}<br>
+            {translate(lang, "dataset_reference_date")}: {metadata.get("reference_date", "Not available")} |
+            {translate(lang, "last_manual_validation")}: {metadata.get("last_manual_validation", "Not available")}<br><br>
+            🔗 <a href="{LIVE_APP_URL}" target="_blank">{translate(lang, "live_app")}</a> |
+            💻 <a href="{GITHUB_URL}" target="_blank">{translate(lang, "github_repo")}</a><br><br>
+            {translate(lang, "footer_warning")}
+        </div>
+    </div>
     """,
     unsafe_allow_html=True,
 )
