@@ -52,7 +52,7 @@ TEXT = {
         "dataset_reference_date": "Dataset Reference Date",
         "last_manual_validation": "Last Manual Validation",
         "dataset_status": "Dataset Status",
-        "curated_dataset": "Curated dataset",
+        "curated_dataset": "Updated with secondary-source review",
         "validation_status": "Validation status",
         "market_scope": "Market scope",
         "data_freshness": "Data freshness",
@@ -87,6 +87,7 @@ TEXT = {
         "demo_6": "Human-in-the-loop validation",
 
         "data_quality": "Data Quality & Human Validation",
+        "data_quality_dashboard": "Data Quality Dashboard",
         "data_quality_intro": "This section summarizes the dataset governance and validation status used by this tool.",
         "data_quality_note": "The app uses a manually curated dataset and does **not** automatically update deposit rates or product conditions without human review.",
         "human_reviewed": "Human-reviewed",
@@ -96,6 +97,20 @@ TEXT = {
         "human_validation_workflow_text": "Source checks generate validation reports before any dataset update.",
         "workflow_expander": "How the validation workflow works",
         "dataset_language_note": "Product notes, alerts and official source comments may remain in Portuguese because they reflect the original dataset and bank documentation.",
+
+        "products_reviewed": "Products reviewed",
+        "products_in_simulation": "Products in simulation",
+        "products_with_source": "Products with source",
+        "products_with_alerts": "Products with alerts",
+        "official_validation": "Official validation",
+        "pending_where_applicable": "Pending where applicable",
+        "validation_status_column": "Validation Status",
+        "official_source_validated": "Official source validated",
+        "official_confirmation_recommended": "Official confirmation recommended",
+        "secondary_source_review": "Secondary-source review",
+        "review_required": "Review required",
+        "source_coverage_by_bank": "Source Coverage by Bank",
+        "validation_status_distribution": "Validation Status Distribution",
 
         "simulation_summary": "Simulation Summary",
         "capital": "Capital",
@@ -107,8 +122,13 @@ TEXT = {
         "best_tanb": "Best TANB",
         "mode": "Mode",
 
-        "recommended_option": "Recommended option",
-        "recommended_reason": "Recommended by highest estimated net interest among eligible deposits.",
+        "recommended_option": "Highest estimated net interest",
+        "recommended_reason": "Shown by highest estimated net interest among eligible deposits.",
+        "eligibility_warning": "Eligibility alert",
+        "eligibility_warning_text": "This product may include specific eligibility conditions. Confirm the latest official documentation before making any financial decision.",
+        "new_clients_warning": "This product may be restricted to new clients.",
+        "new_money_warning": "This product may require new money or new subscription amounts.",
+        "early_withdrawal_warning": "Early withdrawal conditions may be limited or subject to penalties.",
 
         "selected_deposit_simulation": "Selected Deposit Simulation",
         "select_deposit": "Select deposit to simulate",
@@ -176,7 +196,7 @@ TEXT = {
         "dataset_reference_date": "Data de Referência dos Dados",
         "last_manual_validation": "Última Validação Manual",
         "dataset_status": "Estado do Dataset",
-        "curated_dataset": "Dataset curado",
+        "curated_dataset": "Atualizado com revisão por fonte secundária",
         "validation_status": "Estado da validação",
         "market_scope": "Âmbito de mercado",
         "data_freshness": "Atualidade dos dados",
@@ -211,6 +231,7 @@ TEXT = {
         "demo_6": "Validação humana no processo",
 
         "data_quality": "Qualidade dos Dados e Validação Humana",
+        "data_quality_dashboard": "Dashboard de Qualidade dos Dados",
         "data_quality_intro": "Esta secção resume a governação dos dados e o estado de validação usado por esta ferramenta.",
         "data_quality_note": "A app usa um dataset manualmente curado e **não** atualiza automaticamente taxas ou condições dos produtos sem revisão humana.",
         "human_reviewed": "Revisto humanamente",
@@ -220,6 +241,20 @@ TEXT = {
         "human_validation_workflow_text": "As verificações de fontes geram relatórios de validação antes de qualquer atualização do dataset.",
         "workflow_expander": "Como funciona o workflow de validação",
         "dataset_language_note": "As notas dos produtos, alertas e comentários de fontes podem permanecer em português por refletirem o dataset original e a documentação bancária.",
+
+        "products_reviewed": "Produtos revistos",
+        "products_in_simulation": "Produtos na simulação",
+        "products_with_source": "Produtos com fonte",
+        "products_with_alerts": "Produtos com alertas",
+        "official_validation": "Validação oficial",
+        "pending_where_applicable": "Pendente quando aplicável",
+        "validation_status_column": "Estado de Validação",
+        "official_source_validated": "Fonte oficial validada",
+        "official_confirmation_recommended": "Confirmação oficial recomendada",
+        "secondary_source_review": "Revisão por fonte secundária",
+        "review_required": "Revisão necessária",
+        "source_coverage_by_bank": "Cobertura de Fontes por Banco",
+        "validation_status_distribution": "Distribuição do Estado de Validação",
 
         "simulation_summary": "Resumo da Simulação",
         "capital": "Capital",
@@ -231,8 +266,13 @@ TEXT = {
         "best_tanb": "Melhor TANB",
         "mode": "Modo",
 
-        "recommended_option": "Opção recomendada",
-        "recommended_reason": "Recomendado por maior juro líquido estimado entre os depósitos elegíveis.",
+        "recommended_option": "Maior juro líquido estimado",
+        "recommended_reason": "Apresentado por maior juro líquido estimado entre os depósitos elegíveis.",
+        "eligibility_warning": "Alerta de elegibilidade",
+        "eligibility_warning_text": "Este produto pode incluir condições específicas de elegibilidade. Confirme sempre a documentação oficial mais recente antes de qualquer decisão financeira.",
+        "new_clients_warning": "Este produto pode estar limitado a novos clientes.",
+        "new_money_warning": "Este produto pode exigir novos montantes ou novas subscrições.",
+        "early_withdrawal_warning": "As condições de mobilização antecipada podem ser limitadas ou sujeitas a penalizações.",
 
         "selected_deposit_simulation": "Simulação do Depósito Selecionado",
         "select_deposit": "Selecionar depósito para simular",
@@ -327,6 +367,72 @@ def get_series_value(row: pd.Series, column_name: str | None, default: str = "N/
     return default
 
 
+def has_value(value) -> bool:
+    if pd.isna(value):
+        return False
+
+    text = str(value).strip().lower()
+
+    empty_values = [
+        "",
+        "n/a",
+        "na",
+        "nan",
+        "none",
+        "not available",
+        "não disponível",
+        "nao disponivel",
+    ]
+
+    return text not in empty_values
+
+
+def is_affirmative(value) -> bool:
+    if pd.isna(value):
+        return False
+
+    text = str(value).strip().lower()
+
+    affirmative_values = [
+        "yes",
+        "y",
+        "sim",
+        "true",
+        "1",
+        "required",
+        "obrigatório",
+        "obrigatorio",
+        "exclusive",
+        "exclusivo",
+        "only",
+        "apenas",
+    ]
+
+    return any(token in text for token in affirmative_values)
+
+
+def is_negative(value) -> bool:
+    if pd.isna(value):
+        return False
+
+    text = str(value).strip().lower()
+
+    negative_values = [
+        "no",
+        "não",
+        "nao",
+        "false",
+        "0",
+        "not",
+        "sem",
+        "not required",
+        "não obrigatório",
+        "nao obrigatorio",
+    ]
+
+    return any(token in text for token in negative_values)
+
+
 def to_excel_bytes(df: pd.DataFrame) -> bytes:
     output = BytesIO()
 
@@ -375,6 +481,27 @@ def is_clean_alert(value) -> bool:
     return text in clean_values
 
 
+def infer_validation_status(
+    row: pd.Series,
+    lang: str,
+    source_col: str | None,
+    alerts_col: str | None,
+) -> str:
+    source_value = get_series_value(row, source_col, "") if source_col else ""
+    alerts_value = get_series_value(row, alerts_col, "") if alerts_col else ""
+
+    if has_value(source_value) and is_clean_alert(alerts_value):
+        return translate(lang, "official_source_validated")
+
+    if has_value(source_value):
+        return translate(lang, "official_confirmation_recommended")
+
+    if not has_value(source_value) and has_value(alerts_value):
+        return translate(lang, "review_required")
+
+    return translate(lang, "secondary_source_review")
+
+
 def build_clean_ranking_table(
     ranking: pd.DataFrame,
     lang: str,
@@ -385,6 +512,7 @@ def build_clean_ranking_table(
     net_interest_col: str | None,
     final_amount_col: str | None,
     alerts_col: str | None,
+    source_col: str | None,
 ) -> pd.DataFrame:
     display_df = pd.DataFrame()
 
@@ -408,10 +536,76 @@ def build_clean_ranking_table(
     if final_amount_col:
         display_df[translate(lang, "estimated_final_amount")] = ranking[final_amount_col].apply(format_currency)
 
+    display_df[translate(lang, "validation_status_column")] = ranking.apply(
+        lambda row: infer_validation_status(
+            row=row,
+            lang=lang,
+            source_col=source_col,
+            alerts_col=alerts_col,
+        ),
+        axis=1,
+    )
+
     if alerts_col:
         display_df[translate(lang, "alerts")] = ranking[alerts_col]
 
     return display_df
+
+
+def build_eligibility_warnings(
+    row: pd.Series,
+    lang: str,
+    new_clients_col: str | None,
+    new_money_col: str | None,
+    early_withdrawal_col: str | None,
+) -> list[str]:
+    warnings = []
+
+    new_clients_value = get_series_value(row, new_clients_col, "") if new_clients_col else ""
+    new_money_value = get_series_value(row, new_money_col, "") if new_money_col else ""
+    early_withdrawal_value = get_series_value(row, early_withdrawal_col, "") if early_withdrawal_col else ""
+
+    if is_affirmative(new_clients_value):
+        warnings.append(translate(lang, "new_clients_warning"))
+
+    if is_affirmative(new_money_value):
+        warnings.append(translate(lang, "new_money_warning"))
+
+    if early_withdrawal_col and (is_negative(early_withdrawal_value) or not has_value(early_withdrawal_value)):
+        warnings.append(translate(lang, "early_withdrawal_warning"))
+
+    return warnings
+
+
+def get_source_coverage_dataframe(
+    df: pd.DataFrame,
+    bank_col: str | None,
+    source_col: str | None,
+) -> pd.DataFrame:
+    if not bank_col:
+        return pd.DataFrame()
+
+    temp_df = df.copy()
+
+    if source_col:
+        temp_df["Has Source"] = temp_df[source_col].apply(has_value)
+    else:
+        temp_df["Has Source"] = False
+
+    coverage = (
+        temp_df.groupby(bank_col, dropna=False)
+        .agg(
+            Products=(bank_col, "size"),
+            Products_With_Source=("Has Source", "sum"),
+        )
+        .reset_index()
+    )
+
+    coverage["Source_Coverage_%"] = (
+        coverage["Products_With_Source"] / coverage["Products"] * 100
+    ).round(1)
+
+    return coverage.rename(columns={bank_col: "Bank"})
 
 
 # ------------------------------------------------------------
@@ -436,18 +630,20 @@ st.markdown(
         font-size: 42px;
         font-weight: 800;
         margin-bottom: 0px;
-        color: #FFFFFF;
+        color: inherit;
     }
 
     .subtitle {
         font-size: 17px;
-        color: #D1D5DB;
+        color: inherit;
+        opacity: 0.75;
         margin-bottom: 25px;
     }
 
     .small-muted {
         font-size: 13px;
-        color: #D1D5DB;
+        color: inherit;
+        opacity: 0.75;
     }
 
     .simulation-card {
@@ -470,6 +666,16 @@ st.markdown(
         color: #F9FAFB;
     }
 
+    .warning-card {
+        background-color: #422006;
+        border: 1px solid #F59E0B;
+        border-radius: 16px;
+        padding: 18px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        color: #FFFFFF;
+    }
+
     .freshness-card {
         background-color: #422006;
         border: 1px solid #F59E0B;
@@ -481,7 +687,9 @@ st.markdown(
     }
 
     .freshness-card .card-title,
-    .freshness-card .card-line {
+    .freshness-card .card-line,
+    .warning-card .card-title,
+    .warning-card .card-line {
         color: #FFFFFF;
     }
 
@@ -538,87 +746,16 @@ st.markdown(
 
     .footer-box .small-muted {
         color: #D1D5DB;
+        opacity: 1;
     }
 
     a {
         text-decoration: none;
-        color: #60A5FA;
+        color: #2563EB;
     }
 
     a:hover {
         text-decoration: underline;
-    }
-
-    @media (prefers-color-scheme: light) {
-        .main-title {
-            color: #111827;
-        }
-
-        .subtitle {
-            color: #374151;
-        }
-
-        .simulation-card {
-            background-color: #F9FAFB;
-            border: 1px solid #D1D5DB;
-            color: #111827;
-        }
-
-        .simulation-card .card-title,
-        .simulation-card .card-line {
-            color: #111827;
-        }
-
-        .recommended-card {
-            background-color: #ECFDF5;
-            border: 1px solid #16A34A;
-            color: #064E3B;
-        }
-
-        .recommended-card .card-title,
-        .recommended-card .card-line {
-            color: #064E3B;
-        }
-
-        .freshness-card {
-            background-color: #78350F;
-            border: 1px solid #D97706;
-            color: #FFFFFF;
-        }
-
-        .freshness-card .card-title,
-        .freshness-card .card-line {
-            color: #FFFFFF;
-        }
-
-        .highlight-card {
-            background-color: #F8FAFC;
-            border: 1px solid #CBD5E1;
-            color: #111827;
-        }
-
-        .highlight-icon,
-        .highlight-title {
-            color: #111827;
-        }
-
-        .highlight-text {
-            color: #374151;
-        }
-
-        .footer-box {
-            background-color: #F8FAFC;
-            border: 1px solid #CBD5E1;
-            color: #111827;
-        }
-
-        .footer-box .small-muted {
-            color: #374151;
-        }
-
-        a {
-            color: #2563EB;
-        }
     }
     </style>
     """,
@@ -668,6 +805,19 @@ capital = st.sidebar.number_input(
 
 maturity_col = find_column(df, ["Prazo (meses)", "Maturity", "Maturity (months)"])
 bank_col = find_column(df, ["Banco", "Bank"])
+
+source_col_df = find_column(
+    df,
+    [
+        "Fonte oficial / referência",
+        "Fonte oficial",
+        "Official source",
+        "Source",
+        "Reference",
+    ],
+)
+
+alerts_col_df = find_column(df, ["Alertas", "Alerts"])
 
 if maturity_col:
     available_maturities = sorted(df[maturity_col].dropna().unique())
@@ -826,6 +976,39 @@ source_col = find_column(
     ],
 )
 
+new_clients_col = find_column(
+    ranking,
+    [
+        "Novos clientes",
+        "Novo cliente",
+        "New clients",
+        "New client",
+        "Only new clients",
+    ],
+)
+
+new_money_col = find_column(
+    ranking,
+    [
+        "Novos montantes",
+        "Novo montante",
+        "New money",
+        "New amounts",
+        "Only new money",
+    ],
+)
+
+early_withdrawal_col = find_column(
+    ranking,
+    [
+        "Mobilização antecipada",
+        "Mobilizacao antecipada",
+        "Early withdrawal",
+        "Withdrawable",
+        "Mobil/Internet",
+    ],
+)
+
 
 # ------------------------------------------------------------
 # Optional alert filtering
@@ -837,6 +1020,22 @@ if show_only_without_relevant_alerts and alerts_col:
 if ranking.empty:
     st.error(translate(lang, "no_after_alert_filter"))
     st.stop()
+
+
+# ------------------------------------------------------------
+# Add validation status column to technical ranking
+# ------------------------------------------------------------
+
+ranking = ranking.copy()
+ranking[translate(lang, "validation_status_column")] = ranking.apply(
+    lambda row: infer_validation_status(
+        row=row,
+        lang=lang,
+        source_col=source_col,
+        alerts_col=alerts_col,
+    ),
+    axis=1,
+)
 
 
 # ------------------------------------------------------------
@@ -902,6 +1101,23 @@ with overview_tab:
             "This tool is for educational and informational purposes only. It does not constitute financial advice.",
         )
     )
+
+    dq_overview_col1, dq_overview_col2, dq_overview_col3, dq_overview_col4 = st.columns(4)
+
+    source_count = df[source_col_df].apply(has_value).sum() if source_col_df else 0
+    alerts_count = df[alerts_col_df].apply(lambda value: not is_clean_alert(value)).sum() if alerts_col_df else 0
+
+    with dq_overview_col1:
+        st.metric(translate(lang, "products_reviewed"), len(df))
+
+    with dq_overview_col2:
+        st.metric(translate(lang, "products_in_simulation"), len(ranking))
+
+    with dq_overview_col3:
+        st.metric(translate(lang, "products_with_source"), int(source_count))
+
+    with dq_overview_col4:
+        st.metric(translate(lang, "official_validation"), translate(lang, "pending_where_applicable"))
 
     st.markdown(f"## {translate(lang, 'project_highlights')}")
 
@@ -1068,6 +1284,31 @@ with simulator_tab:
         unsafe_allow_html=True,
     )
 
+    best_eligibility_warnings = build_eligibility_warnings(
+        row=best_row,
+        lang=lang,
+        new_clients_col=new_clients_col,
+        new_money_col=new_money_col,
+        early_withdrawal_col=early_withdrawal_col,
+    )
+
+    if best_eligibility_warnings:
+        warning_lines = "".join(
+            f'<div class="card-line">• {warning}</div>'
+            for warning in best_eligibility_warnings
+        )
+
+        st.markdown(
+            f"""
+            <div class="warning-card">
+                <div class="card-title">⚠️ {translate(lang, "eligibility_warning")}</div>
+                <div class="card-line">{translate(lang, "eligibility_warning_text")}</div>
+                {warning_lines}
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
     st.markdown(f"## {translate(lang, 'selected_deposit_simulation')}")
 
     selection_df = ranking.copy().reset_index(drop=True)
@@ -1114,6 +1355,24 @@ with simulator_tab:
         unsafe_allow_html=True,
     )
 
+    selected_eligibility_warnings = build_eligibility_warnings(
+        row=selected_deposit,
+        lang=lang,
+        new_clients_col=new_clients_col,
+        new_money_col=new_money_col,
+        early_withdrawal_col=early_withdrawal_col,
+    )
+
+    if selected_eligibility_warnings:
+        selected_warning_lines = "\n".join(
+            f"- {warning}"
+            for warning in selected_eligibility_warnings
+        )
+
+        st.warning(
+            f"**{translate(lang, 'eligibility_warning')}:**\n\n{selected_warning_lines}"
+        )
+
     st.markdown(f"## {translate(lang, 'ranking_results')}")
     st.markdown(translate(lang, "ranking_intro"))
 
@@ -1127,6 +1386,7 @@ with simulator_tab:
         net_interest_col=net_interest_col,
         final_amount_col=final_amount_col,
         alerts_col=alerts_col,
+        source_col=source_col,
     )
 
     st.dataframe(
@@ -1214,29 +1474,38 @@ with validation_tab:
         """
     )
 
-    dq_col1, dq_col2, dq_col3 = st.columns(3)
+    dq_col1, dq_col2, dq_col3, dq_col4 = st.columns(4)
+
+    source_count = df[source_col_df].apply(has_value).sum() if source_col_df else 0
+    alerts_count = df[alerts_col_df].apply(lambda value: not is_clean_alert(value)).sum() if alerts_col_df else 0
 
     with dq_col1:
         st.metric(
-            label=translate(lang, "dataset_reference_date"),
-            value=metadata.get("reference_date", "Not available"),
+            label=translate(lang, "products_reviewed"),
+            value=len(df),
         )
 
     with dq_col2:
         st.metric(
-            label=translate(lang, "last_manual_validation"),
-            value=metadata.get("last_manual_validation", "Not available"),
+            label=translate(lang, "products_in_simulation"),
+            value=len(ranking),
         )
 
     with dq_col3:
         st.metric(
-            label=translate(lang, "validation_status"),
-            value=translate(lang, "human_reviewed"),
+            label=translate(lang, "products_with_source"),
+            value=int(source_count),
         )
 
-    dq_col4, dq_col5 = st.columns(2)
-
     with dq_col4:
+        st.metric(
+            label=translate(lang, "products_with_alerts"),
+            value=int(alerts_count),
+        )
+
+    dq_col5, dq_col6 = st.columns(2)
+
+    with dq_col5:
         st.info(
             f"""
             **{translate(lang, "official_source_tracking")}:** {translate(lang, "enabled")}  
@@ -1244,12 +1513,46 @@ with validation_tab:
             """
         )
 
-    with dq_col5:
+    with dq_col6:
         st.success(
             f"""
             **{translate(lang, "human_validation_workflow")}:** {translate(lang, "enabled")}  
             {translate(lang, "human_validation_workflow_text")}
             """
+        )
+
+    st.markdown(f"## {translate(lang, 'data_quality_dashboard')}")
+
+    validation_status_df = ranking[translate(lang, "validation_status_column")].value_counts().reset_index()
+    validation_status_df.columns = [translate(lang, "validation_status_column"), "Count"]
+
+    if not validation_status_df.empty:
+        fig_validation = px.bar(
+            validation_status_df,
+            x=translate(lang, "validation_status_column"),
+            y="Count",
+            title=translate(lang, "validation_status_distribution"),
+            text="Count",
+        )
+
+        fig_validation.update_traces(textposition="outside", cliponaxis=False)
+        fig_validation.update_layout(showlegend=False)
+
+        st.plotly_chart(fig_validation, use_container_width=True)
+
+    source_coverage_df = get_source_coverage_dataframe(
+        df=df,
+        bank_col=bank_col,
+        source_col=source_col_df,
+    )
+
+    if not source_coverage_df.empty:
+        st.markdown(f"### {translate(lang, 'source_coverage_by_bank')}")
+
+        st.dataframe(
+            source_coverage_df,
+            use_container_width=True,
+            hide_index=True,
         )
 
     st.caption(f"**{translate(lang, 'technical_note')}:** {translate(lang, 'dataset_language_note')}")
@@ -1334,6 +1637,24 @@ with details_tab:
                         translate(lang, "estimated_final_amount"),
                         format_currency(get_series_value(row, final_amount_col)),
                     )
+
+            st.write(
+                f"**{translate(lang, 'validation_status_column')}:** "
+                f"{infer_validation_status(row, lang, source_col, alerts_col)}"
+            )
+
+            product_warnings = build_eligibility_warnings(
+                row=row,
+                lang=lang,
+                new_clients_col=new_clients_col,
+                new_money_col=new_money_col,
+                early_withdrawal_col=early_withdrawal_col,
+            )
+
+            if product_warnings:
+                st.write(f"**{translate(lang, 'eligibility_warning')}:**")
+                for warning in product_warnings:
+                    st.write(f"- {warning}")
 
             if alerts_col:
                 st.write(f"**{translate(lang, 'alerts')}:**")
