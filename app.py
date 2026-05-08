@@ -56,7 +56,7 @@ TEXT = {
         "validation_status": "Validation status",
         "market_scope": "Market scope",
         "data_freshness": "Data freshness",
-        "manual_validation_required": "Manual validation required",
+        "manual_validation_required": "Official source confirmation recommended",
 
         "project_highlights": "Project Highlights",
         "banking_analytics": "Banking Analytics",
@@ -180,7 +180,7 @@ TEXT = {
         "validation_status": "Estado da validação",
         "market_scope": "Âmbito de mercado",
         "data_freshness": "Atualidade dos dados",
-        "manual_validation_required": "Validação manual necessária",
+        "manual_validation_required": "Confirmação em fonte oficial recomendada",
 
         "project_highlights": "Destaques do Projeto",
         "banking_analytics": "Análise Bancária",
