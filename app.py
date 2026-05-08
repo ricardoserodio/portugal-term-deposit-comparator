@@ -1741,6 +1741,7 @@ with details_tab:
             with detail_col1:
                 if tanb_col_r:
                     st.metric("TANB", format_percentage(get_series_value(row, tanb_col_r)))
+
                 if maturity_col_r:
                     st.write(
                         f"**{translate(lang, 'maturity')}:** "
@@ -1753,6 +1754,7 @@ with details_tab:
                         translate(lang, "estimated_gross_interest"),
                         format_currency(get_series_value(row, gross_interest_col)),
                     )
+
                 if tax_col:
                     st.metric(
                         translate(lang, "estimated_tax"),
@@ -1765,6 +1767,7 @@ with details_tab:
                         translate(lang, "estimated_net_interest"),
                         format_currency(get_series_value(row, net_interest_col)),
                     )
+
                 if final_amount_col:
                     st.metric(
                         translate(lang, "estimated_final_amount"),
@@ -1786,6 +1789,7 @@ with details_tab:
 
             if product_warnings:
                 st.write(f"**{translate(lang, 'eligibility_warning')}:**")
+
                 for warning in product_warnings:
                     st.write(f"- {warning}")
 
@@ -1799,11 +1803,12 @@ with details_tab:
 
             if source_col:
                 source_value = get_series_value(row, source_col, "")
+
                 if pd.notna(source_value) and str(source_value).strip():
                     st.write(f"**{translate(lang, 'official_source')}:**")
                     st.write(source_value)
 
-      st.markdown(f"## {translate(lang, 'downloads')}")
+    st.markdown(f"## {translate(lang, 'downloads')}")
 
     download_col1, download_col2 = st.columns(2)
 
