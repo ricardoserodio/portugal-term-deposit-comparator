@@ -1803,7 +1803,7 @@ with details_tab:
                     st.write(f"**{translate(lang, 'official_source')}:**")
                     st.write(source_value)
 
-    st.markdown(f"## {translate(lang, 'downloads')}")
+      st.markdown(f"## {translate(lang, 'downloads')}")
 
     download_col1, download_col2 = st.columns(2)
 
@@ -1822,4 +1822,30 @@ with details_tab:
 
         st.download_button(
             label=translate(lang, "download_excel"),
-            da
+            data=excel_data,
+            file_name="term_deposit_ranking.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+
+
+# ------------------------------------------------------------
+# Footer
+# ------------------------------------------------------------
+
+st.divider()
+
+st.markdown(
+    f"""
+    <div class="footer-box">
+        <div class="small-muted">
+            {translate(lang, "footer_built")}<br>
+            {translate(lang, "dataset_reference_date")}: {metadata.get("reference_date", "Not available")} |
+            {translate(lang, "last_manual_validation")}: {metadata.get("last_manual_validation", "Not available")}<br><br>
+            🔗 <a href="{LIVE_APP_URL}" target="_blank">{translate(lang, "live_app")}</a> |
+            💻 <a href="{GITHUB_URL}" target="_blank">{translate(lang, "github_repo")}</a><br><br>
+            {translate(lang, "footer_warning")}
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
