@@ -626,24 +626,32 @@ st.set_page_config(
 st.markdown(
     """
     <style>
+    html, body, [class*="css"] {
+        background-color: #020617;
+        color: #F9FAFB;
+    }
+
+    .stApp {
+        background-color: #020617;
+        color: #F9FAFB;
+    }
+
     .main-title {
         font-size: 42px;
         font-weight: 800;
         margin-bottom: 0px;
-        color: inherit;
+        color: #F9FAFB;
     }
 
     .subtitle {
         font-size: 17px;
-        color: inherit;
-        opacity: 0.75;
+        color: #CBD5E1;
         margin-bottom: 25px;
     }
 
     .small-muted {
         font-size: 13px;
-        color: inherit;
-        opacity: 0.75;
+        color: #CBD5E1;
     }
 
     .simulation-card {
@@ -745,13 +753,12 @@ st.markdown(
     }
 
     .footer-box .small-muted {
-        color: #D1D5DB;
-        opacity: 1;
+        color: #CBD5E1;
     }
 
     a {
         text-decoration: none;
-        color: #2563EB;
+        color: #60A5FA;
     }
 
     a:hover {
